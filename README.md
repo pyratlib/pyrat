@@ -9,6 +9,16 @@ The latest stable release is available on PyPI, and you can install it by saying
 ```
 pip install pyrat
 ```
+Anaconda users can install using ``conda-forge``:
+```
+conda install -c conda-forge pyrat
+```
+
+To build PyRat from source, say `python setup.py build`.
+Then, to install PyRat, say `python setup.py install`.
+If all went well, you should be able to execute the demo scripts under `examples/`
+(OS X users should follow the installation guide given below).
+
 Alternatively, you can download or clone the repository and use `pip` to handle dependencies:
 
 ```
@@ -27,6 +37,7 @@ pyrat (0.x.x, /path/to/pyrat)
 ```
 
 # Development Team:
+------------
 
 - [Abner Cardoso] 
 - [Bruno Spinelli]
@@ -38,12 +49,3 @@ pyrat (0.x.x, /path/to/pyrat)
 [Tulio Almeida]:https://github.com/tuliofalmeida
 
 
-Anaconda users can install using ``conda-forge``:
-```
-conda install -c conda-forge librosa
-```
-
-To build PyRat from source, say `python setup.py build`.
-Then, to install PyRat, say `python setup.py install`.
-If all went well, you should be able to execute the demo scripts under `examples/`
-(OS X users should follow the installation guide given below).
