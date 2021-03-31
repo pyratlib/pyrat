@@ -5,6 +5,6 @@ PyRat is a user friendly library in python to analyze data from the DeepLabCut. 
 
 # Development Team:
 
-- Abner Cardoso:https://github.com/abnr
-- Bruno Spinelli
-- Tulio Almeida:https://github.com/tuliofalmeida
+- [Abner Cardoso]:https://github.com/abnr
+- [Bruno Spinelli]:https://github.com/brunospinelli
+- [Tulio Almeida]:https://github.com/tuliofalmeida
