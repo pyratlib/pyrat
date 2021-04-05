@@ -42,6 +42,7 @@ pyrat (0.x.x, /path/to/pyrat)
 - [Abner Cardoso] 
 - [Bruno Spinelli]
 - [Tulio Almeida]
+- [Ramon Hypolito]
 
 <!-- Links -->
 [Abner Cardoso]:https://github.com/abnr
