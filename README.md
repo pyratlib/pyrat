@@ -47,5 +47,6 @@ pyrat (0.x.x, /path/to/pyrat)
 [Abner Cardoso]:https://github.com/abnr
 [Bruno Spinelli]:https://github.com/brunospinelli
 [Tulio Almeida]:https://github.com/tuliofalmeida
+[Ramon Hypolito]:https://github.com/ramonhypolito
 
 
