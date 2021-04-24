@@ -5,13 +5,13 @@ PyRat is a user friendly library in python to analyze data from the DeepLabCut. 
 # Installation
 ------------
 
-The latest stable release is available on PyPI, and you can install it by saying
+The latest stable release is available on PyPi, and you can install it by saying
 ```
-pip install pyrat
+pip install pyratlib
 ```
 Anaconda users can install using ``conda-forge``:
 ```
-conda install -c conda-forge pyrat
+conda install -c conda-forge pyratlib
 ```
 
 To build PyRat from source, say `python setup.py build`.
@@ -22,18 +22,18 @@ If all went well, you should be able to execute the demo scripts under `examples
 Alternatively, you can download or clone the repository and use `pip` to handle dependencies:
 
 ```
-unzip pyrat.zip
-pip install -e pyrat
+unzip pyratlib.zip
+pip install -e pyratlib
 ```
 or
 ```
 git clone https://github.com/pyratlib/pyrat.git
-pip install -e pyrat
+pip install -e pyratlib
 ```
 
 By calling `pip list` you should see `pyrat` now as an installed package:
 ```
-pyrat (0.x.x, /path/to/pyrat)
+pyrat (0.x.x, /path/to/pyratlib)
 ```
 
 # Development Team:
