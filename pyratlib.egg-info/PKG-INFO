@@ -1,0 +1,75 @@
+Metadata-Version: 2.1
+Name: pyratlib
+Version: 0.0.7
+Summary: PyRat is a user friendly library in python to analyze data from the DeepLabCut. Developed to help researchers unfamiliar with programming can perform animal behavior analysis more simpler.
+Home-page: https://github.com/pyratlib/pyrat
+License: MIT
+Download-URL: https://github.com/pyratlib/pyrat
+Keywords: Data analysis,Animal Behavior,Electrophysiology
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Build Tools
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# PyRat - Python in Rodent Analysis and Tracking
+------------
+PyRat is a user friendly library in python to analyze data from the DeepLabCut. Developed to help researchers unfamiliar with programming can perform animal behavior analysis more simpler.
+
+# Installation
+------------
+
+The latest stable release is available on PyPi, and you can install it by saying
+```
+pip install pyratlib
+```
+Anaconda users can install using ``conda-forge``:
+```
+conda install -c conda-forge pyratlib
+```
+
+To build PyRat from source, say `python setup.py build`.
+Then, to install PyRat, say `python setup.py install`.
+If all went well, you should be able to execute the demo scripts under `examples/`
+(OS X users should follow the installation guide given below).
+
+Alternatively, you can download or clone the repository and use `pip` to handle dependencies:
+
+```
+unzip pyratlib.zip
+pip install -e pyratlib
+```
+or
+```
+git clone https://github.com/pyratlib/pyrat.git
+pip install -e pyratlib
+```
+
+By calling `pip list` you should see `pyrat` now as an installed package:
+```
+pyrat (0.x.x, /path/to/pyratlib)
+```
+
+# Development Team:
+------------
+
+- [Abner Cardoso] 
+- [Bruno Spinelli]
+- [Tulio Almeida]
+- [Ramon Hypolito]
+
+<!-- Links -->
+[Abner Cardoso]:https://github.com/abnr
+[Bruno Spinelli]:https://github.com/brunospinelli
+[Tulio Almeida]:https://github.com/tuliofalmeida
+[Ramon Hypolito]:https://github.com/ramonhypolito
+
+
+
+
