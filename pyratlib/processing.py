@@ -4,9 +4,6 @@ import pandas as pd
 from matplotlib import cm
 
 def Trajectory(data,bodyPartTraj,bodyPartBox, **kwargs):
-  # ,start=None,end=None,fps=30,cmapType='viridis',
-                # figureTitle=None,hSize=6,wSize=8,fontsize=15,invertY=True,saveName=None,
-                # figformat=".eps"):
     """
     Plots the trajectory of the determined body part.
 
@@ -48,6 +45,8 @@ def Trajectory(data,bodyPartTraj,bodyPartBox, **kwargs):
         Determine the resolutions (dpi), default = 80.
     ax : fig, optional
         Creates an 'axs' to be added to a figure created outside the role by the user.
+    fig : fig, optional
+        Creates an 'fig()' to be added to a figure created outside the role by the user.
 
     Returns
     -------
@@ -76,6 +75,7 @@ def Trajectory(data,bodyPartTraj,bodyPartBox, **kwargs):
     figureTitle = kwargs.get('figureTitle')
     fps = kwargs.get('fps')
     ax = kwargs.get('ax')
+    fig = kwargs.get('fig')
     if type(fps) == type(None):
       fps = 30
     cmapType = kwargs.get('cmapType')
@@ -148,12 +148,17 @@ def Trajectory(data,bodyPartTraj,bodyPartBox, **kwargs):
 
     else:
         ax.set_aspect('equal')
-        ax.scatter(x, y, c=c, cmap=cmap, s=3)
+        plot = ax.scatter(x, y, c=c, cmap=cmap, s=3)
         ax.plot([esquerda,esquerda] , [baixo,cima],"k")
         ax.plot([esquerda,direita]  , [cima,cima],"k")
         ax.plot([direita,direita]   , [cima,baixo],"k")
         ax.plot([direita,esquerda]  , [baixo,baixo],"k")
         ax.tick_params(axis='both', which='major', labelsize=fontsize)
+
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes('right',size='5%', pad=0.05)
+        cb = fig.colorbar(plot,cax=cax)
+        cb.ax.tick_params(labelsize=fontsize)
 
         if invertY == True:
             ax.invert_yaxis()
@@ -204,7 +209,7 @@ def Heatmap(data, bodyPart, **kwargs):
         Determine the resolutions (dpi), default = 80.
     ax : fig, optional
         Creates an 'axs' to be added to a figure created outside the role by the user.
-    fig : fig,optional
+    fig : fig, optional
         Creates an 'fig()' to be added to a figure created outside the role by the user.
 
     Returns
@@ -408,6 +413,9 @@ def FieldDetermination(Fields,plot=False,**kwargs):
     graph where the areas were positioned. It needs to receive the DataFrame of the 
     data and the part of the body that will be used to determine the limits of the 
     environment (usually the tail).
+    ***ATTENTION***
+    If plot = True, the user must pass the variable 'data' and 'bodypart' as input 
+    to the function.   
     
     Parameters
     ----------
@@ -423,14 +431,28 @@ def FieldDetermination(Fields,plot=False,**kwargs):
     bodyPartBox : str, optional
         The body part you want to use to estimate the limits of the environment, 
         usually the base of the tail is the most suitable for this determination.
+    posit : dict, optional
+        A dictionary to pass objects with directions and not need to use input. It
+        must contain a cache and 8 dice ('objt_type','center_x','center_y', 'radius',
+        'a_x', 'a_y' , 'height', 'width'), 'obj_type' must be 0 or 1 (0 = circle and 
+        1 = rectangle). An example of this dictionary is in Section examples.       
+    obj_color : str, optional
+        Allows you to determine the color of the objects created in the plot.
     invertY : bool, optional
         Determine if de Y axis will be inverted (used for DLC output).
+
     Returns
     -------
     out : pandas DataFrame
         The coordinates of the created fields.
           plot
         Plot of objects created for ease of use.
+
+    Examples
+    --------
+    Dictionary :
+    >>>> posições = {'circ': ['0','200','200','50','0'  ,'0'  ,'0' ,'0' ],
+    >>>>             'rect': ['1','0'  ,'0'  ,'0' ,'400','200','75','75'],}
 
     See Also
     --------
@@ -445,12 +467,17 @@ def FieldDetermination(Fields,plot=False,**kwargs):
     import pandas as pd
     import matplotlib.pyplot as plt
     import matplotlib.patches as patches
- 
+      
+    ax = kwargs.get('ax')
+    posit = kwargs.get('posit')
     data = kwargs.get('data')
     bodyPartBox = kwargs.get('bodyPartBox')
     invertY = kwargs.get('invertY')
     if type(invertY) == type(None):
       invertY = True
+    obj_color = kwargs.get('obj_color')
+    if type(obj_color) == type(None):
+      obj_color = 'r'
 
     values = (data.iloc[2:,1:].values).astype(np.float)
     lista1 = (data.iloc[0][1:].values +" - " + data.iloc[1][1:].values).tolist()
@@ -465,32 +492,39 @@ def FieldDetermination(Fields,plot=False,**kwargs):
         baixo = values[:,lista1.index(bodyPartBox+" - y")].min()
         cima = values[:,lista1.index(bodyPartBox+" - y")].max()
 
+    if type(posit) == None:
+        for i in range(Fields):
+            print('Enter the object type '+ str(i+1) + " (0 - circular, 1 - rectangular):")
+            objectType = int(input())
+            if objectType == 0:
+                print('Enter the X value of the center of the field ' + str(i+1) + ':')
+                centerX = int(input())
+                print('Enter the Y value of the center of the field ' + str(i+1) + ':')
+                centerY = int(input())
+                print('Enter the radius value of the field ' + str(i+1) + ':')
+                radius = int(input())
+                circle.append(plt.Circle((centerX, centerY), radius, color=obj_color,fill = False))
+                df2 = pd.DataFrame([[objectType, centerX, centerY,radius,null,null,null,null]], columns=['fields','center_x','center_y', 'radius', 'a_x', 'a_y' , 'height', 'width'])
+            else:
+                print('Enter the X value of the field\'s lower left vertex ' + str(i+1) + ':')
+                aX = int(input())
+                print('Enter the Y value of the field\'s lower left vertex ' + str(i+1) + ':')
+                aY = int(input())
+                print('Enter the field height value ' + str(i+1) + ':')
+                height = int(input())
+                print('Enter the field\'s width value ' + str(i+1) + ':')
+                width = int(input())
+                rect.append(patches.Rectangle((aX, aY), height, width, linewidth=1, edgecolor=obj_color, facecolor='none'))
+                df2 = pd.DataFrame([[objectType, null,null, null ,aX,aY,height,width]], columns=['fields','center_x','center_y', 'radius', 'a_x', 'a_y' , 'height', 'width'])
+            fields = fields.append(df2, ignore_index=True)
+    else:
+        for v in posit:
+            df2 = pd.DataFrame([[v, posit[v][1], posit[v][2],posit[v][3],posit[v][4],posit[v][5],posit[v][6],posit[v][7]]], 
+                                 columns=['fields','center_x','center_y', 'radius', 'a_x', 'a_y','height', 'width'])
+            rect.append(patches.Rectangle((float(posit[v][4]),float(posit[v][5])), float(posit[v][6]), float(posit[v][7]), linewidth=1, edgecolor=obj_color, facecolor='none'))
+            circle.append(plt.Circle((float(posit[v][1]),float(posit[v][2])), float(posit[v][3]), color=obj_color,fill = False))
+            fields = fields.append(df2, ignore_index=True)
 
-    for i in range(Fields):
-        print('Enter the object type '+ str(i+1) + " (0 - circular, 1 - rectangular):")
-        objectType = int(input())
-        if objectType == 0:
-            print('Enter the X value of the center of the field ' + str(i+1) + ':')
-            centerX = int(input())
-            print('Enter the Y value of the center of the field ' + str(i+1) + ':')
-            centerY = int(input())
-            print('Enter the radius value of the field ' + str(i+1) + ':')
-            radius = int(input())
-            circle.append(plt.Circle((centerX, centerY), radius, color='r',fill = False))
-            df2 = pd.DataFrame([[objectType, centerX, centerY,radius,null,null,null,null]], columns=['fields','center_x','center_y', 'radius', 'a_x', 'a_y' , 'height', 'width'])
-        else:
-            print('Enter the X value of the field\'s lower left vertex ' + str(i+1) + ':')
-            aX = int(input())
-            print('Enter the Y value of the field\'s lower left vertex ' + str(i+1) + ':')
-            aY = int(input())
-            print('Enter the field height value ' + str(i+1) + ':')
-            height = int(input())
-            print('Enter the field\'s width value ' + str(i+1) + ':')
-            width = int(input())
-            rect.append(patches.Rectangle((aX, aY), height, width, linewidth=1, edgecolor='r', facecolor='none'))
-            df2 = pd.DataFrame([[objectType, null,null, null ,aX,aY,height,width]], columns=['fields','center_x','center_y', 'radius', 'a_x', 'a_y' , 'height', 'width'])
-        fields = fields.append(df2, ignore_index=True)
-        
     if plot:
         ax.plot([esquerda,esquerda] , [baixo,cima],"k")
         ax.plot([esquerda,direita]  , [cima,cima],"k")
