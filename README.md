@@ -44,7 +44,7 @@ pyrat (0.x.x, /path/to/pyratlib)
 - [Tulio Almeida]
 - [Bruno Spinelli]
 - [Ramon Hypolito]
-- Maria Carolina Gonzales
+- Maria Carolina Gonzalez
 - [Abner Cardoso] 
 
 <!-- Links -->
