@@ -39,10 +39,13 @@ pyrat (0.x.x, /path/to/pyratlib)
 # Development Team:
 ------------
 
-- [Abner Cardoso] 
-- [Bruno Spinelli]
+
+
 - [Tulio Almeida]
+- [Bruno Spinelli]
 - [Ramon Hypolito]
+- Maria Carolina Gonzales
+- [Abner Cardoso] 
 
 <!-- Links -->
 [Abner Cardoso]:https://github.com/abnr
