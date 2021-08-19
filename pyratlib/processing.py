@@ -155,7 +155,7 @@ def Trajectory(data,bodyPartTraj,bodyPartBox, **kwargs):
         ax.plot([direita,esquerda]  , [baixo,baixo],"k")
         ax.tick_params(axis='both', which='major', labelsize=fontsize)
 
-        if invertY != True:
+        if invertY == True:
             ax.invert_yaxis()
 
 def Heatmap(data, bodyPart, **kwargs):
@@ -204,6 +204,8 @@ def Heatmap(data, bodyPart, **kwargs):
         Determine the resolutions (dpi), default = 80.
     ax : fig, optional
         Creates an 'axs' to be added to a figure created outside the role by the user.
+    fig : fig,optional
+        Creates an 'fig()' to be added to a figure created outside the role by the user.
 
     Returns
     -------
@@ -230,6 +232,7 @@ def Heatmap(data, bodyPart, **kwargs):
     figureTitle = kwargs.get('figureTitle')
     fps = kwargs.get('fps')
     ax = kwargs.get('ax')
+    fig = kwargs.get('fig')
     if type(fps) == type(None):
       fps = 30
     cmapType = kwargs.get('cmapType')
@@ -302,7 +305,6 @@ def Heatmap(data, bodyPart, **kwargs):
         cax = divider.append_axes('right',size='5%', pad=0.05)
 
         im = ax.imshow([x,y], cmap=plt.get_cmap(cmapType))
-        fig = plt.figure()
         cb = fig.colorbar(im,cax=cax, orientation='vertical')
         cb.ax.tick_params(labelsize=fontsize)
 
@@ -880,5 +882,6 @@ def HeadOrientation(data, step, head = "cervical", tail = "tailBase", **kwargs):
         ax.plot([esquerda,direita]  , [cima,cima],"k")
         ax.plot([direita,direita]   , [cima,baixo],"k")
         ax.plot([direita,esquerda]  , [baixo,baixo],"k")
+        ax.tick_params(axis='both', which='major', labelsize=fontsize)
         if invertY == True:
             ax.invert_yaxis()        
