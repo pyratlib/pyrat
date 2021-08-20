@@ -1,5 +1,5 @@
 [![python-version](https://img.shields.io/pypi/pyversions/pyratlib?style=flat-square)](https://www.python.org/)
-[![Build Status](https://img.shields.io/appveyor/build/pyrat/pyratlib?style=flat-square)](https://travis-ci.com/pyrat/pyratlib)
+<!-- [![Build Status](https://img.shields.io/appveyor/build/pyrat/pyratlib?style=flat-square)](https://travis-ci.com/pyrat/pyratlib) -->
 [![downloads](https://img.shields.io/pypi/dm/pyratlib?style=flat-square)](https://pypi.org/project/pyratlib/)
 [![version](https://img.shields.io/pypi/v/pyratlib?color=blue&style=flat-square)](https://pypi.org/project/pyratlib/)
 [![commit](https://img.shields.io/github/last-commit/pyratlib/pyrat?color=blue&style=flat-square)](https://github.com/pyratlib/pyrat/commits/main)
