@@ -159,6 +159,7 @@ def Trajectory(data,bodyPartTraj,bodyPartBox, **kwargs):
         cax = divider.append_axes('right',size='5%', pad=0.05)
         cb = fig.colorbar(plot,cax=cax)
         cb.ax.tick_params(labelsize=fontsize)
+        cb.set_label(label='Time (s)', fontsize=fontsize)
 
         if invertY == True:
             ax.invert_yaxis()
@@ -403,7 +404,7 @@ def MotionMetrics (data,bodyPart,filter=0,fps=30,max_real=60,min_real=0):
 
     return df
 
-def FieldDetermination(Fields,plot=False,**kwargs):
+def FieldDetermination(Fields=1,plot=False,**kwargs):
     """
     Creates a data frame with the desired dimensions to extract information about
     an area. Therefore, you must determine the area in which you want to extract 
@@ -469,6 +470,7 @@ def FieldDetermination(Fields,plot=False,**kwargs):
     import matplotlib.patches as patches
       
     ax = kwargs.get('ax')
+    ret = kwargs.get('ret')
     posit = kwargs.get('posit')
     data = kwargs.get('data')
     bodyPartBox = kwargs.get('bodyPartBox')
@@ -478,14 +480,16 @@ def FieldDetermination(Fields,plot=False,**kwargs):
     obj_color = kwargs.get('obj_color')
     if type(obj_color) == type(None):
       obj_color = 'r'
+    if type(ret) == type(None):
+      ret = True
 
-    values = (data.iloc[2:,1:].values).astype(np.float)
-    lista1 = (data.iloc[0][1:].values +" - " + data.iloc[1][1:].values).tolist()
     null = 0
     fields = pd.DataFrame(columns=['fields','center_x','center_y', 'radius', 'a_x', 'a_y' , 'height', 'width'])
     circle = []
     rect = []
     if plot:
+        values = (data.iloc[2:,1:].values).astype(np.float)
+        lista1 = (data.iloc[0][1:].values +" - " + data.iloc[1][1:].values).tolist()
         ax = plt.gca()
         esquerda = values[:,lista1.index(bodyPartBox+" - x")].min()
         direita = values[:,lista1.index(bodyPartBox+" - x")].max()
@@ -523,7 +527,6 @@ def FieldDetermination(Fields,plot=False,**kwargs):
                                  columns=['fields','center_x','center_y', 'radius', 'a_x', 'a_y','height', 'width'])
             if posit[v][0] == 1:
                 rect.append(patches.Rectangle((float(posit[v][4]),float(posit[v][5])), float(posit[v][6]), float(posit[v][7]), linewidth=1, edgecolor=obj_color, facecolor='none'))
-                print(posit[v][0])
             if posit[v][0] == 0:
                 circle.append(plt.Circle((float(posit[v][1]),float(posit[v][2])), float(posit[v][3]), color=obj_color,fill = False))
             fields = fields.append(df2, ignore_index=True)
@@ -540,7 +543,8 @@ def FieldDetermination(Fields,plot=False,**kwargs):
         for i in range(len(rect)):
             ax.add_patch(rect[i])
 
-    return fields
+    if ret:
+            return fields
 
 def Interaction(data,bodyPart,fields,fps=30):
     """
@@ -959,7 +963,9 @@ def SignalSubset(sig_data,freq,fields, **kwargs):
     Notes
     -----
     This function was based using data from the electrophysiology plexon. Input data was formatted using
-    the LFP() function.""" 
+    the LFP() function0. Lista first index is to enter the list; Lista second index is to choose between
+    start([0]) ou end([1]); Lista third index is to choose between object/fields([0],[1] ...).
+    """ 
 
     start_time= kwargs.get('start_time')
     end_time = kwargs.get('end_time')
@@ -998,7 +1004,7 @@ def SignalSubset(sig_data,freq,fields, **kwargs):
                 lista.append((start,end))
 
         dicts = {}
-        keys = range(len(list(interação['obj'].unique())[1:]))
+        keys = range(len(list(fields['obj'].unique())[1:]))
 
         for j in keys:
             cortes = {}
@@ -1058,3 +1064,127 @@ def LFP(data):
     df.insert(0, "Time", time, True)
 
     return df  
+
+def PlotInteraction(interactions, **kwargs):
+  """
+  Plots a bar with interactions times of the determined body with the fields.
+
+  Parameters
+  ----------
+  interactions : pandas DataFrame
+      The DataFrame with the interactions of the fields (output of Interaction()). 
+  barH : float, optional
+      Bar height.
+  start : int, optional
+      Moment of the video you want tracking to start, in seconds. If the variable 
+      is empty (None), the entire video will be processed.
+  end : int, optional
+      Moment of the video you want tracking to end, in seconds. If the variable is 
+      empty (None), the entire video will be processed.
+  fps : int
+      The recording frames per second.
+  figureTitle : str, optional
+      Figure title.
+  hSize : int, optional
+      Determine the figure height size (x).
+  wSize : int, optional
+      Determine the figure width size (y).
+  fontsize : int, optional
+      Determine of all font sizes.
+  saveName : str, optional
+      Determine the save name of the plot.        
+  figformat : str, optional
+      Determines the type of file that will be saved. Used as base the ".eps", 
+      which may be another supported by matplotlib. 
+  res : int, optional
+      Determine the resolutions (dpi), default = 80.
+  ax : fig, optional
+      Creates an 'axs' to be added to a figure created outside the role by the user.
+
+  Returns
+  -------
+  out : plot
+      The output of the function is the figure with the interactions times with fields.
+
+  See Also
+  --------
+  For more information and usage examples: https://github.com/pyratlib/pyrat
+
+  Notes
+  -----
+  This function was developed based on DLC outputs and is able to support 
+  matplotlib configurations."""
+
+    
+  import pyratlib as rat
+  import matplotlib.pyplot as plt
+
+  saveName= kwargs.get('saveName')
+  start= kwargs.get('start')
+  end= kwargs.get('end')
+  figureTitle = kwargs.get('figureTitle')
+  fps = kwargs.get('fps')
+  ax = kwargs.get('ax')
+  if type(fps) == type(None):
+    fps = 30
+  hSize = kwargs.get('hSize')
+  if type(hSize) == type(None):
+    hSize = 2
+  wSize = kwargs.get('wSize')
+  if type(wSize) == type(None):
+    wSize = 8
+  fontsize = kwargs.get('fontsize')
+  if type(fontsize) == type(None):
+    fontsize = 15
+  figformat = kwargs.get('figformat')
+  if type(figformat) == type(None):
+    figformat = '.eps'
+    res = kwargs.get('res')
+  if type(res) == type(None):
+    res = 80 
+  barH = kwargs.get('barH')
+  if type(barH) == type(None):
+    barH = .5
+
+  if type(start) == type(None):
+      init = 0
+      finish = interactions.end.iloc[-1]
+  else:
+      init = int(start)
+      finish = int(end) 
+
+  times = []
+  starts = []
+  for i in range (int(interactions.obj.max())+1):
+      times.append((interactions.end.loc[(interactions.obj == i) & (interactions.start >= init) & (interactions.start <= finish)])-(interactions.start.loc[(interactions.obj == i) & (interactions.start >= init) & (interactions.start <= finish)]).values)
+      starts.append((interactions.start.loc[(interactions.obj == i) & (interactions.start >= init) & (interactions.start <= finish)]).values)
+
+  barHeight = barH
+
+  if type(ax) == type(None):
+    plt.figure(figsize=(wSize,hSize))
+    for i in range (1,int(interactions.obj.max())+1):
+      plt.barh(0,times[i], left=starts[i], height = barHeight, label = "Field "+str(i))
+
+    plt.legend(ncol=int(interactions.obj.max()))
+    plt.xlim(init, finish)
+    plt.yticks([])
+    plt.xticks(fontsize = fontsize*0.8)
+    plt.xlabel("Time (s)",fontsize=fontsize)
+    plt.ylim([-barHeight,barHeight])
+    plt.show()
+    if type(saveName) != type(None):
+        plt.savefig(saveName+figformat)
+  else:
+    for i in range (1,int(interactions.obj.max())+1):
+      ax.barh(0,times[i], left=starts[i], height = barHeight, label = "Field "+str(i))
+    ax.set_aspect('equal')
+    ax.set_xlim([init, finish])
+    ax.set_yticklabels([])
+    ax.get_yaxis().set_visible(False)
+    ax.tick_params(axis='x', labelsize=fontsize*.8)
+    ax.tick_params(axis='y', labelsize=fontsize*.8)
+    ax.legend(ncol=int(interactions.obj.max()),fontsize=fontsize)
+    ax.set_xlabel('Time (s)',fontsize=fontsize)
+
+    ax.set_ylim([-barHeight,barHeight])
