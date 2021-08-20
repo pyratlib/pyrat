@@ -3,9 +3,12 @@
 [![commit](https://img.shields.io/github/last-commit/pyratlib/pyrat?color=blue&style=flat-square)](https://github.com/pyratlib/pyrat/commits/main)
 [![Open Source? Yes!](https://badgen.net/badge/Open%20Source%20%3F/Yes%21/blue?icon=github)](https://github.com/pyrat/pyratlib)
 [![Stars](https://img.shields.io/github/stars/pyratlib/pyrat?style=social)](https://github.com/pyratlib/pyrat/stargazers)
-
-
 <!-- [![Build Status](https://img.shields.io/appveyor/build/pyrat/pyratlib?style=flat-square)](https://travis-ci.com/pyrat/pyratlib) -->
+
+<p align="center">
+  <img width="300" height="600" src="https://github.com/pyratlib/pyrat/blob/main/docs/LOGO%20PYRAT.png">
+</p>
+
 
 # PyRat - Python in Rodent Analysis and Tracking
 ------------
