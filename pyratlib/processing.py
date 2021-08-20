@@ -143,7 +143,7 @@ def Trajectory(data,bodyPartTraj,bodyPartBox, **kwargs):
         plt.yticks(fontsize = fontsize*0.8)
         plt.show()
 
-        if type(saveName) == type(None):
+        if type(saveName) != type(None):
             plt.savefig(saveName+figformat)
 
     else:
@@ -451,8 +451,8 @@ def FieldDetermination(Fields,plot=False,**kwargs):
     Examples
     --------
     Dictionary :
-    >>>> posições = {'circ': ['0','200','200','50','0'  ,'0'  ,'0' ,'0' ],
-    >>>>             'rect': ['1','0'  ,'0'  ,'0' ,'400','200','75','75'],}
+    >>>> posições = {'circ': [0,200,200,50,0  ,0  ,0 ,0 ],
+    >>>>             'rect': [1,0  ,0  ,0 ,400,200,75,75],}
 
     See Also
     --------
@@ -481,7 +481,7 @@ def FieldDetermination(Fields,plot=False,**kwargs):
 
     values = (data.iloc[2:,1:].values).astype(np.float)
     lista1 = (data.iloc[0][1:].values +" - " + data.iloc[1][1:].values).tolist()
-    null = .001
+    null = 0
     fields = pd.DataFrame(columns=['fields','center_x','center_y', 'radius', 'a_x', 'a_y' , 'height', 'width'])
     circle = []
     rect = []
@@ -492,7 +492,7 @@ def FieldDetermination(Fields,plot=False,**kwargs):
         baixo = values[:,lista1.index(bodyPartBox+" - y")].min()
         cima = values[:,lista1.index(bodyPartBox+" - y")].max()
 
-    if type(posit) == None:
+    if type(posit) == type(None):
         for i in range(Fields):
             print('Enter the object type '+ str(i+1) + " (0 - circular, 1 - rectangular):")
             objectType = int(input())
@@ -518,11 +518,14 @@ def FieldDetermination(Fields,plot=False,**kwargs):
                 df2 = pd.DataFrame([[objectType, null,null, null ,aX,aY,height,width]], columns=['fields','center_x','center_y', 'radius', 'a_x', 'a_y' , 'height', 'width'])
             fields = fields.append(df2, ignore_index=True)
     else:
-        for v in posit:
-            df2 = pd.DataFrame([[v, posit[v][1], posit[v][2],posit[v][3],posit[v][4],posit[v][5],posit[v][6],posit[v][7]]], 
+        for i,v in enumerate(posit):
+            df2 = pd.DataFrame([[posit[v][0], posit[v][1], posit[v][2],posit[v][3],posit[v][4],posit[v][5],posit[v][6],posit[v][7]]], 
                                  columns=['fields','center_x','center_y', 'radius', 'a_x', 'a_y','height', 'width'])
-            rect.append(patches.Rectangle((float(posit[v][4]),float(posit[v][5])), float(posit[v][6]), float(posit[v][7]), linewidth=1, edgecolor=obj_color, facecolor='none'))
-            circle.append(plt.Circle((float(posit[v][1]),float(posit[v][2])), float(posit[v][3]), color=obj_color,fill = False))
+            if posit[v][0] == 1:
+                rect.append(patches.Rectangle((float(posit[v][4]),float(posit[v][5])), float(posit[v][6]), float(posit[v][7]), linewidth=1, edgecolor=obj_color, facecolor='none'))
+                print(posit[v][0])
+            if posit[v][0] == 0:
+                circle.append(plt.Circle((float(posit[v][1]),float(posit[v][2])), float(posit[v][3]), color=obj_color,fill = False))
             fields = fields.append(df2, ignore_index=True)
 
     if plot:
@@ -558,7 +561,7 @@ def Interaction(data,bodyPart,fields,fps=30):
     Returns
     -------
     out : int
-        Scale factor of your box.
+        DataFrame with all interactions. 0 = no interaction; 1 = first object; 2 = second object...
 
     See Also
     --------
@@ -919,3 +922,139 @@ def HeadOrientation(data, step, head = "cervical", tail = "tailBase", **kwargs):
         ax.tick_params(axis='both', which='major', labelsize=fontsize)
         if invertY == True:
             ax.invert_yaxis()        
+
+def SignalSubset(sig_data,freq,fields, **kwargs):
+    """
+    Performs the extraction of substes from electrophysiology data. For proper functioning, the 
+    data must be organized in a data. To subset the data with its own list of markers, the 
+    variable fields must be empty (fields = None).
+
+    Parameters
+    ----------
+    sig_data : pandas DataFrame
+        The input electrophysiology data organized with the channels in columns. We use the function
+        LFP().
+    freq : pandas DataFrame
+        Frequency of electrophysiology data collection.
+    fields : str
+        Event time markers. Developed to use the output of the "Interaction()" function. But with 
+        standardized data like the output of this function, it is possible to assemble the dataframe.
+    start_time : list, optional
+        Moment of the video you want subset to start, in seconds. If the variable is empty (None), 
+        the entire video will be processed.
+    end_time : list, optional
+        Moment of the video you want subset to end, in seconds. If the variable is empty (None), 
+        the entire video will be processed.
+        
+    Returns
+    -------
+    out : dict
+        Dictionary with the objects/places passed in the input, inside each one will have the channels
+        passed with the subset of the data.
+
+    See Also
+    --------
+    For more information and usage examples: https://github.com/pyratlib/pyrat
+
+    Notes
+    -----
+    This function was based using data from the electrophysiology plexon. Input data was formatted using
+    the LFP() function.""" 
+
+    start_time= kwargs.get('start_time')
+    end_time = kwargs.get('end_time')
+
+    if type(fields) == type(None):
+        dicts = {}
+        if type(start_time) == type(None):
+            keys = range(len(end_time))
+        else:
+            keys = range(len(start_time))
+        for j in keys:
+            cortes = {}
+            for ç,canal in enumerate(sig_data.columns):
+                if type(start_time) == type(None):
+                    for i in range(len(end_time)):
+                        cortes[ç] = sig_data[canal][None:end_time[i]*freq]
+                        dicts[j] = cortes 
+                elif type(end_time) == type(None):
+                    for i in range(len(start_time)):
+                        cortes[ç] = sig_data[canal][start_time[i]*freq:None]
+                        dicts[j] = cortes 
+                else: 
+                    for i in range(len(start_time)):
+                        cortes[ç] = sig_data[canal][start_time[i]*freq:end_time[i]*freq]
+                        dicts[j] = cortes 
+
+    else:
+        lista = []
+        start = []
+        end = []
+
+        for i in fields['obj'].unique():
+            if i != 0:
+                start.append(fields.start.loc[(fields.obj == i)].values)
+                end.append(fields.end.loc[(fields.obj == i)].values)
+                lista.append((start,end))
+
+        dicts = {}
+        keys = range(len(list(interação['obj'].unique())[1:]))
+
+        for j in keys:
+            cortes = {}
+            for ç,canal in enumerate(sig_data.columns):
+                for i in range(len(lista[0][0][j])):
+                    cortes[ç] = sig_data[canal][int(lista[0][0][j][i]*freq):int(lista[0][1][j][i]*freq)]
+                    dicts[j] = cortes
+
+    return dicts
+
+def LFP(data):
+    """
+    Performs LFP data extraction from a MATLAB file (.mat) and returns all channels arranged in 
+    columns of a DataFrame. This data was converted from a plexon file (.plx).
+
+    Parameters
+    ----------
+    data : .mat
+        Plexon data in .mat format
+       
+    Returns
+    -------
+    out : pandas DataFrame
+        A DataFrame with the data arranged in columns by channels.
+
+    See Also
+    --------
+    For more information and usage examples: https://github.com/pyratlib/pyrat
+
+    Notes
+    -----
+    This function was based using data from the electrophysiology plexon. Input data was formatted using
+    the LFP() function.""" 
+
+    import numpy as np
+    column_name = []
+    if len(data['allad'][0]) == 192:
+        time = np.arange(0,len(data['allad'][0][128])/data['adfreq'][0][0],1/data['adfreq'][0][0]) 
+        values = np.zeros((len(data['allad'][0][128]),64))
+        ç = 128
+        for j in range(64):
+            for r in range(len(data['allad'][0][128])):
+                values[r][j] = data['allad'][0][ç][r]
+            column_name.append(data['adnames'][ç])
+            ç +=1
+    elif len(data['allad'][0]) == 96:
+        time = np.arange(0,len(data['allad'][0][64])/data['adfreq'][0][0],1/data['adfreq'][0][0]) 
+        values = np.zeros((len(data['allad'][0][64]),32))
+        ç = 64
+        for j in range(32):
+            for r in range(len(data['allad'][0][64])):
+                values[r][j] = data['allad'][0][ç][r]
+            column_name.append(data['adnames'][ç])
+            ç +=1
+
+    df = pd.DataFrame(values,columns=column_name,index= None) 
+    df.insert(0, "Time", time, True)
+
+    return df  
