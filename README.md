@@ -6,7 +6,7 @@
 <!-- [![Build Status](https://img.shields.io/appveyor/build/pyrat/pyratlib?style=flat-square)](https://travis-ci.com/pyrat/pyratlib) -->
 
 <p align="center">
-  <img width="300" height="600" src="https://github.com/pyratlib/pyrat/blob/main/docs/LOGO%20PYRAT.png">
+  <img width="500" height="600" src="https://github.com/pyratlib/pyrat/blob/main/docs/LOGO%20PYRAT.png">
 </p>
 
 
