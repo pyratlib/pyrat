@@ -1184,7 +1184,7 @@ def PlotInteraction(interactions, **kwargs):
     ax.get_yaxis().set_visible(False)
     ax.tick_params(axis='x', labelsize=fontsize*.8)
     ax.tick_params(axis='y', labelsize=fontsize*.8)
-    ax.legend(ncol=int(interactions.obj.max()),fontsize=fontsize)
+    ax.legend(ncol=int(interactions.obj.max()),fontsize=fontsize*.8)
     ax.set_xlabel('Time (s)',fontsize=fontsize)
 
     ax.set_ylim([-barHeight,barHeight])
