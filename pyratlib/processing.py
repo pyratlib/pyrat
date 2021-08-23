@@ -154,6 +154,7 @@ def Trajectory(data,bodyPartTraj,bodyPartBox, **kwargs):
         ax.plot([direita,direita]   , [cima,baixo],"k")
         ax.plot([direita,esquerda]  , [baixo,baixo],"k")
         ax.tick_params(axis='both', which='major', labelsize=fontsize)
+        ax.set_title(figureTitle, fontsize=fontsize)
 
         divider = make_axes_locatable(ax)
         cax = divider.append_axes('right',size='5%', pad=0.05)
@@ -303,6 +304,7 @@ def Heatmap(data, bodyPart, **kwargs):
     else:
         ax.hist2d(x,y, bins = bins, vmax = vmax,cmap=plt.get_cmap(cmapType))
         ax.tick_params(axis='both', which='major', labelsize=fontsize)
+        ax.set_title(figureTitle, fontsize=fontsize)
 
         if invertY == True:
             ax.invert_yaxis()
@@ -923,6 +925,7 @@ def HeadOrientation(data, step, head = "cervical", tail = "tailBase", **kwargs):
         ax.plot([esquerda,direita]  , [cima,cima],"k")
         ax.plot([direita,direita]   , [cima,baixo],"k")
         ax.plot([direita,esquerda]  , [baixo,baixo],"k")
+        ax.set_title(figureTitle, fontsize=fontsize)
         ax.tick_params(axis='both', which='major', labelsize=fontsize)
         if invertY == True:
             ax.invert_yaxis()        
@@ -1068,7 +1071,6 @@ def LFP(data):
 def PlotInteraction(interactions, **kwargs):
   """
   Plots a bar with interactions times of the determined body with the fields.
-
   Parameters
   ----------
   interactions : pandas DataFrame
@@ -1100,16 +1102,13 @@ def PlotInteraction(interactions, **kwargs):
       Determine the resolutions (dpi), default = 80.
   ax : fig, optional
       Creates an 'axs' to be added to a figure created outside the role by the user.
-
   Returns
   -------
   out : plot
       The output of the function is the figure with the interactions times with fields.
-
   See Also
   --------
   For more information and usage examples: https://github.com/pyratlib/pyrat
-
   Notes
   -----
   This function was developed based on DLC outputs and is able to support 
@@ -1125,6 +1124,9 @@ def PlotInteraction(interactions, **kwargs):
   figureTitle = kwargs.get('figureTitle')
   fps = kwargs.get('fps')
   ax = kwargs.get('ax')
+  aspect = kwargs.get('aspect')
+  if type(aspect) == type(None):
+    aspect = 'equal'
   if type(fps) == type(None):
     fps = 30
   hSize = kwargs.get('hSize')
@@ -1166,6 +1168,7 @@ def PlotInteraction(interactions, **kwargs):
     for i in range (1,int(interactions.obj.max())+1):
       plt.barh(0,times[i], left=starts[i], height = barHeight, label = "Field "+str(i))
 
+    plt.title(figureTitle,fontsize=fontsize)
     plt.legend(ncol=int(interactions.obj.max()))
     plt.xlim(init, finish)
     plt.yticks([])
@@ -1178,7 +1181,9 @@ def PlotInteraction(interactions, **kwargs):
   else:
     for i in range (1,int(interactions.obj.max())+1):
       ax.barh(0,times[i], left=starts[i], height = barHeight, label = "Field "+str(i))
-    ax.set_aspect('equal')
+    ax.set_title(figureTitle, fontsize=fontsize)
+    if aspect == type(None):
+      ax.set_aspect(aspect)
     ax.set_xlim([init, finish])
     ax.set_yticklabels([])
     ax.get_yaxis().set_visible(False)
