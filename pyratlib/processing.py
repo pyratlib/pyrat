@@ -36,6 +36,8 @@ def Trajectory(data,bodyPartTraj,bodyPartBox, **kwargs):
         Determine of all font sizes.
     invertY : bool, optional
         Determine if de Y axis will be inverted (used for DLC output).
+    limit_boundaries : bool, optional.
+        Limits the points to the box boundary.
     saveName : str, optional
         Determine the save name of the plot.        
     figformat : str, optional
@@ -75,6 +77,9 @@ def Trajectory(data,bodyPartTraj,bodyPartBox, **kwargs):
     figureTitle = kwargs.get('figureTitle')
     fps = kwargs.get('fps')
     ax = kwargs.get('ax')
+    limit_boundaries = kwargs.get('limit_boundaries')
+    if type(limit_boundaries) == type(None):
+      limit_boundaries = False
     fig = kwargs.get('fig')
     if type(fps) == type(None):
       fps = 30
@@ -115,18 +120,40 @@ def Trajectory(data,bodyPartTraj,bodyPartBox, **kwargs):
         x = values[:,lista1.index(bodyPartTraj+" - x")][init:finish]
         y = values[:,lista1.index(bodyPartTraj+" - y")][init:finish]
 
-    cmap = plt.get_cmap(cmapType)
-
     c = np.linspace(0, x.size/fps, x.size)
     esquerda = values[:,lista1.index(bodyPartBox+" - x")].min()
     direita = values[:,lista1.index(bodyPartBox+" - x")].max()
     baixo = values[:,lista1.index(bodyPartBox+" - y")].min()
     cima = values[:,lista1.index(bodyPartBox+" - y")].max()
 
+    if limit_boundaries:
+        testeX = []
+        for i in range(len(x)):
+            if x[i] >= direita:
+                testeX.append(direita)
+            elif x[i] <= esquerda:
+                testeX.append(esquerda)
+            else:
+                testeX.append(x[i])
+        
+        testeY = []
+        for i in range(len(x)):
+            if y[i] >= cima:
+                testeY.append(cima)
+            elif y[i] <= baixo:
+                testeY.append(baixo)
+            else:
+                testeY.append(y[i])
+    else:
+        testeX = x
+        testeY = y
+
+    cmap = plt.get_cmap(cmapType)
+
     if type(ax) == type(None): 
         plt.figure(figsize=(wSize, hSize), dpi=res)
         plt.title(figureTitle, fontsize=fontsize)
-        plt.scatter(x, y, c=c, cmap=cmap, s=3)
+        plt.scatter(testeX, testeY, c=c, cmap=cmap, s=3)
         plt.plot([esquerda,esquerda] , [baixo,cima],"k")
         plt.plot([esquerda,direita]  , [cima,cima],"k")
         plt.plot([direita,direita]   , [cima,baixo],"k")
@@ -148,7 +175,7 @@ def Trajectory(data,bodyPartTraj,bodyPartBox, **kwargs):
 
     else:
         ax.set_aspect('equal')
-        plot = ax.scatter(x, y, c=c, cmap=cmap, s=3)
+        plot = ax.scatter(testeX, testeY, c=c, cmap=cmap, s=3)
         ax.plot([esquerda,esquerda] , [baixo,cima],"k")
         ax.plot([esquerda,direita]  , [cima,cima],"k")
         ax.plot([direita,direita]   , [cima,baixo],"k")
@@ -175,6 +202,9 @@ def Heatmap(data, bodyPart, **kwargs):
         The input tracking data.
     bodyPart : str
         Body part you want to plot the heatmap.
+    bodyPartBox : str
+        The body part you want to use to estimate the limits of the environment, 
+        usually the base of the tail is the most suitable for this determination.
     start : int, optional
         Moment of the video you want tracking to start, in seconds. If the variable 
         is empty (None), the entire video will be processed.
@@ -185,6 +215,8 @@ def Heatmap(data, bodyPart, **kwargs):
         The recording frames per second.
     cmapType : str, optional
         matplotlib colormap.
+    limit_boundaries : bool, optional.
+        Limits the points to the box boundary.
     figureTitle : str, optional
         Figure title.
     hSize : int, optional
@@ -240,8 +272,14 @@ def Heatmap(data, bodyPart, **kwargs):
     fps = kwargs.get('fps')
     ax = kwargs.get('ax')
     fig = kwargs.get('fig')
+    bodyPartBox = kwargs.get('bodyPartBox')
+    limit_boundaries = kwargs.get('limit_boundaries')
+    if type(limit_boundaries) == type(None):
+      limit_boundaries = False
     if type(fps) == type(None):
       fps = 30
+    if type(bodyPartBox) == type(None):
+      bodyPartBox = bodyPart
     cmapType = kwargs.get('cmapType')
     if type(cmapType) == type(None):
       cmapType = 'viridis'
@@ -274,6 +312,11 @@ def Heatmap(data, bodyPart, **kwargs):
     values = (data.iloc[2:,1:].values).astype(np.float)
     lista1 = (data.iloc[0][1:].values +" - " + data.iloc[1][1:].values).tolist()
 
+    esquerda = values[:,lista1.index(bodyPartBox+" - x")].min()
+    direita = values[:,lista1.index(bodyPartBox+" - x")].max()
+    baixo = values[:,lista1.index(bodyPartBox+" - y")].min()
+    cima = values[:,lista1.index(bodyPartBox+" - y")].max()
+
     if type(start) == type(None):
         x = values[:,lista1.index(bodyPart+" - x")]
         y = values[:,lista1.index(bodyPart+" - y")]
@@ -283,9 +326,31 @@ def Heatmap(data, bodyPart, **kwargs):
         x = values[:,lista1.index(bodyPart+" - x")][init:finish]
         y = values[:,lista1.index(bodyPart+" - y")][init:finish]
 
+    if limit_boundaries:
+        testeX = []
+        for i in range(len(x)):
+            if x[i] >= direita:
+                testeX.append(direita)
+            elif x[i] <= esquerda:
+                testeX.append(esquerda)
+            else:
+                testeX.append(x[i])
+        
+        testeY = []
+        for i in range(len(x)):
+            if y[i] >= cima:
+                testeY.append(cima)
+            elif y[i] <= baixo:
+                testeY.append(baixo)
+            else:
+                testeY.append(y[i])
+    else:
+        testeX = x
+        testeY = y
+    
     if type(ax) == type(None):
         plt.figure(figsize=(wSize, hSize), dpi=res)
-        plt.hist2d(x,y, bins = bins, vmax = vmax,cmap=plt.get_cmap(cmapType))
+        plt.hist2d(testeX,testeY, bins = bins, vmax = vmax,cmap=plt.get_cmap(cmapType))
 
         cb = plt.colorbar()
 
@@ -302,7 +367,7 @@ def Heatmap(data, bodyPart, **kwargs):
         if type(saveName) != type(None):
             plt.savefig(saveName+figformat)
     else:
-        ax.hist2d(x,y, bins = bins, vmax = vmax,cmap=plt.get_cmap(cmapType))
+        ax.hist2d(testeX,testeY, bins = bins, vmax = vmax,cmap=plt.get_cmap(cmapType))
         ax.tick_params(axis='both', which='major', labelsize=fontsize)
         ax.set_title(figureTitle, fontsize=fontsize)
 
@@ -312,7 +377,7 @@ def Heatmap(data, bodyPart, **kwargs):
         divider = make_axes_locatable(ax)
         cax = divider.append_axes('right',size='5%', pad=0.05)
 
-        im = ax.imshow([x,y], cmap=plt.get_cmap(cmapType))
+        im = ax.imshow([testeX,testeY], cmap=plt.get_cmap(cmapType))
         cb = fig.colorbar(im,cax=cax, orientation='vertical')
         cb.ax.tick_params(labelsize=fontsize)
 
@@ -746,7 +811,7 @@ def DrawLine(x, y, angle, **kwargs):
     else:
         return ax.arrow(x, y, arrow_size*np.cos(angle), arrow_size*np.sin(angle),width = arrow_width,head_width=head_width,fc = arrow_color)
 
-def HeadOrientation(data, step, head = "cervical", tail = "tailBase", **kwargs):
+def HeadOrientation(data, step, head = "", tail = "", **kwargs):
     """
     Plots the trajectory of the determined body part.
 
@@ -777,6 +842,8 @@ def HeadOrientation(data, step, head = "cervical", tail = "tailBase", **kwargs):
         empty (None), the entire video will be processed.
     fps : int
         The recording frames per second.
+    limit_boundaries : bool, optional.
+        Limits the points to the box boundary.
     figureTitle : str, optional
         Figure title.
     hSize : int, optional
@@ -832,6 +899,9 @@ def HeadOrientation(data, step, head = "cervical", tail = "tailBase", **kwargs):
     hSize = kwargs.get('hSize')
     bodyPartBox = kwargs.get('bodyPartBox')
     arrow_color = kwargs.get('arrow_color')
+    limit_boundaries = kwargs.get('limit_boundaries')
+    if type(limit_boundaries) == type(None):
+      limit_boundaries = False
     if type(bodyPartBox) == type(None):
       bodyPartBox = tail
     fps = kwargs.get('fps')
@@ -882,16 +952,60 @@ def HeadOrientation(data, step, head = "cervical", tail = "tailBase", **kwargs):
 
         cervicalX = values[:,lista1.index(head+" - x")][init:finish]
         cervicalY = values[:,lista1.index(head+" - y")][init:finish]
-    
+
     boxX = values[:,lista1.index(bodyPartBox+" - x")]
     boxY = values[:,lista1.index(bodyPartBox+" - y")]
-
-    rad = np.arctan2((cervicalY - tailY),(cervicalX - tailX))
 
     esquerda = boxX.min()
     direita = boxX.max()
     baixo = boxY.min()
     cima = boxY.max()
+
+    if limit_boundaries:
+        testeX = []
+        for i in range(len(tailX)):
+            if tailX[i] >= direita:
+                testeX.append(direita)
+            elif tailX[i] <= esquerda:
+                testeX.append(esquerda)
+            else:
+                testeX.append(tailX[i])
+        
+        testeY = []
+        for i in range(len(tailY)):
+            if tailY[i] >= cima:
+                testeY.append(cima)
+            elif tailY[i] <= baixo:
+                testeY.append(baixo)
+            else:
+                testeY.append(tailY[i])
+    else:
+        testeX = tailX
+        testeY = tailY
+
+    if limit_boundaries:
+        tX = []
+        for i in range(len(cervicalX)):
+            if cervicalX[i] >= direita:
+                tX.append(direita)
+            elif cervicalX[i] <= esquerda:
+                tX.append(esquerda)
+            else:
+                tX.append(cervicalX[i])
+        
+        tY = []
+        for i in range(len(cervicalY)):
+            if cervicalY[i] >= cima:
+                tY.append(cima)
+            elif cervicalY[i] <= baixo:
+                tY.append(baixo)
+            else:
+                tY.append(cervicalY[i])
+    else:
+        tX = cervicalX
+        tY = cervicalY
+
+    rad = np.arctan2((np.asarray(tY) - np.asarray(testeY)),(np.asarray(tX) - np.asarray(testeX)))
 
     if type(ax) == type(None):
         plt.figure(figsize=(wSize, hSize), dpi=res)
@@ -907,8 +1021,8 @@ def HeadOrientation(data, step, head = "cervical", tail = "tailBase", **kwargs):
         plt.yticks(fontsize = fontsize*0.8)
       
         for i in range(0,len(tailY),step):
-            rat.DrawLine(tailX[i], tailY[i], (rad[i]), ax = ax,arrow_color = arrow_color, arrow_size = arrow_size)
-
+            rat.DrawLine(tX[i], tY[i], (rad[i]), ax = ax,arrow_color = arrow_color, arrow_size = arrow_size)
+            
         plt.plot([esquerda,esquerda] , [baixo,cima],"k")
         plt.plot([esquerda,direita]  , [cima,cima],"k")
         plt.plot([direita,direita]   , [cima,baixo],"k")
@@ -920,7 +1034,7 @@ def HeadOrientation(data, step, head = "cervical", tail = "tailBase", **kwargs):
     else:
         ax.set_aspect('equal')
         for i in range(0,len(tailY),step):
-            rat.DrawLine(tailX[i], tailY[i], (rad[i]), ax =ax,arrow_color = arrow_color,arrow_size = arrow_size)
+            rat.DrawLine(tX[i], tY[i], (rad[i]), ax =ax,arrow_color = arrow_color,arrow_size = arrow_size)
         ax.plot([esquerda,esquerda] , [baixo,cima],"k")
         ax.plot([esquerda,direita]  , [cima,cima],"k")
         ax.plot([direita,direita]   , [cima,baixo],"k")
@@ -928,7 +1042,7 @@ def HeadOrientation(data, step, head = "cervical", tail = "tailBase", **kwargs):
         ax.set_title(figureTitle, fontsize=fontsize)
         ax.tick_params(axis='both', which='major', labelsize=fontsize)
         if invertY == True:
-            ax.invert_yaxis()        
+            ax.invert_yaxis()
 
 def SignalSubset(sig_data,freq,fields, **kwargs):
     """
