@@ -400,7 +400,7 @@ def Heatmap(data, bodyPart, **kwargs):
 
         im = ax.imshow([testeX,testeY], cmap=plt.get_cmap(cmapType))
         cb = fig.colorbar(im,cax=cax, orientation='vertical')
-        cb.ax.tick_params(labelsize=fontsize)
+        cb.ax.tick_params(labelsize=fontsize*0.8)
 
 def ScaleConverter(dado, pixel_max,pixel_min,max_real, min_real=0):
     """
@@ -1077,7 +1077,9 @@ def HeadOrientation(data, step, head = "", tail = "", **kwargs):
         ax.plot([direita,direita]   , [cima,baixo],"k")
         ax.plot([direita,esquerda]  , [baixo,baixo],"k")
         ax.set_title(figureTitle, fontsize=fontsize)
-        ax.tick_params(axis='both', which='major', labelsize=fontsize)
+        ax.tick_params(axis='both', which='major', labelsize=fontsize*0.8)
+        ax.set_xlabel("X (px)", fontsize = fontsize)
+        ax.set_ylabel("Y (px)", fontsize = fontsize)
         if invertY == True:
             ax.invert_yaxis()
 
@@ -1253,10 +1255,12 @@ def PlotInteraction(interactions, **kwargs):
       Determine the resolutions (dpi), default = 80.
   ax : fig, optional
       Creates an 'axs' to be added to a figure created outside the role by the user.
+
   Returns
   -------
   out : plot
       The output of the function is the figure with the interactions times with fields.
+      
   See Also
   --------
   For more information and usage examples: https://github.com/pyratlib/pyrat
