@@ -3,10 +3,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib import cm
 
-def Trajectory(data,bodyPartTraj,bodyPartBox, **kwargs):
+def Trajectory(data,bodyPartTraj,bodyPartBox = None, **kwargs):
     """
     Plots the trajectory of the determined body part.
-
     Parameters
     ----------
     data : pandas DataFrame
@@ -38,6 +37,14 @@ def Trajectory(data,bodyPartTraj,bodyPartBox, **kwargs):
         Determine if de Y axis will be inverted (used for DLC output).
     limit_boundaries : bool, optional.
         Limits the points to the box boundary.
+    xLimMin : int, optional
+      Determines the minimum size on the axis X.
+    xLimMax : int, optional
+        Determines the maximum size on the axis X.
+    yLimMin : int, optional
+        Determines the minimum size on the axis Y.
+    yLimMax : int, optional
+        Determines the maximum size on the axis Y.
     saveName : str, optional
         Determine the save name of the plot.        
     figformat : str, optional
@@ -49,17 +56,14 @@ def Trajectory(data,bodyPartTraj,bodyPartBox, **kwargs):
         Creates an 'axs' to be added to a figure created outside the role by the user.
     fig : fig, optional
         Creates an 'fig()' to be added to a figure created outside the role by the user.
-
     Returns
     -------
     out : plot
         The output of the function is the figure with the tracking plot of the 
         selected body part.
-
     See Also
     --------
     For more information and usage examples: https://github.com/pyratlib/pyrat
-
     Notes
     -----
     This function was developed based on DLC outputs and is able to support 
@@ -78,6 +82,11 @@ def Trajectory(data,bodyPartTraj,bodyPartBox, **kwargs):
     fps = kwargs.get('fps')
     ax = kwargs.get('ax')
     limit_boundaries = kwargs.get('limit_boundaries')
+    xLimMin = kwargs.get('xLimMin')
+    xLimMax = kwargs.get('xLimMax')
+    yLimMin = kwargs.get('yLimMin')
+    yLimMax = kwargs.get('yLimMax')
+
     if type(limit_boundaries) == type(None):
       limit_boundaries = False
     fig = kwargs.get('fig')
@@ -120,11 +129,22 @@ def Trajectory(data,bodyPartTraj,bodyPartBox, **kwargs):
         x = values[:,lista1.index(bodyPartTraj+" - x")][init:finish]
         y = values[:,lista1.index(bodyPartTraj+" - y")][init:finish]
 
-    c = np.linspace(0, x.size/fps, x.size)
-    esquerda = values[:,lista1.index(bodyPartBox+" - x")].min()
-    direita = values[:,lista1.index(bodyPartBox+" - x")].max()
-    baixo = values[:,lista1.index(bodyPartBox+" - y")].min()
-    cima = values[:,lista1.index(bodyPartBox+" - y")].max()
+
+    cmap = plt.get_cmap(cmapType)
+
+
+    if type(bodyPartBox) == type(None):
+      c = np.linspace(0, x.size/fps, x.size)
+      esquerda = xLimMin
+      direita = xLimMax
+      baixo = yLimMin
+      cima = yLimMax
+    else:
+      c = np.linspace(0, x.size/fps, x.size)
+      esquerda = values[:,lista1.index(bodyPartBox+" - x")].min()
+      direita = values[:,lista1.index(bodyPartBox+" - x")].max()
+      baixo = values[:,lista1.index(bodyPartBox+" - y")].min()
+      cima = values[:,lista1.index(bodyPartBox+" - y")].max()
 
     if limit_boundaries:
         testeX = []
@@ -147,8 +167,6 @@ def Trajectory(data,bodyPartTraj,bodyPartBox, **kwargs):
     else:
         testeX = x
         testeY = y
-
-    cmap = plt.get_cmap(cmapType)
 
     if type(ax) == type(None): 
         plt.figure(figsize=(wSize, hSize), dpi=res)
@@ -180,13 +198,15 @@ def Trajectory(data,bodyPartTraj,bodyPartBox, **kwargs):
         ax.plot([esquerda,direita]  , [cima,cima],"k")
         ax.plot([direita,direita]   , [cima,baixo],"k")
         ax.plot([direita,esquerda]  , [baixo,baixo],"k")
-        ax.tick_params(axis='both', which='major', labelsize=fontsize)
+        ax.tick_params(axis='both', which='major', labelsize=fontsize*0.8)
         ax.set_title(figureTitle, fontsize=fontsize)
+        ax.set_xlabel("X (px)", fontsize = fontsize)
+        ax.set_ylabel("Y (px)", fontsize = fontsize)
 
         divider = make_axes_locatable(ax)
         cax = divider.append_axes('right',size='5%', pad=0.05)
         cb = fig.colorbar(plot,cax=cax)
-        cb.ax.tick_params(labelsize=fontsize)
+        cb.ax.tick_params(labelsize=fontsize*0.8)
         cb.set_label(label='Time (s)', fontsize=fontsize)
 
         if invertY == True:
@@ -368,9 +388,10 @@ def Heatmap(data, bodyPart, **kwargs):
             plt.savefig(saveName+figformat)
     else:
         ax.hist2d(testeX,testeY, bins = bins, vmax = vmax,cmap=plt.get_cmap(cmapType))
-        ax.tick_params(axis='both', which='major', labelsize=fontsize)
+        ax.tick_params(axis='both', which='major', labelsize=fontsize*0.8)
         ax.set_title(figureTitle, fontsize=fontsize)
-
+        ax.set_xlabel("X (px)", fontsize = fontsize)
+        ax.set_ylabel("Y (px)", fontsize = fontsize)
         if invertY == True:
             ax.invert_yaxis()
 
@@ -814,7 +835,6 @@ def DrawLine(x, y, angle, **kwargs):
 def HeadOrientation(data, step, head = "", tail = "", **kwargs):
     """
     Plots the trajectory of the determined body part.
-
     Parameters
     ----------
     data : pandas DataFrame
@@ -844,6 +864,14 @@ def HeadOrientation(data, step, head = "", tail = "", **kwargs):
         The recording frames per second.
     limit_boundaries : bool, optional.
         Limits the points to the box boundary.
+    xLimMin : int, optional
+      Determines the minimum size on the axis X.
+    xLimMax : int, optional
+        Determines the maximum size on the axis X.
+    yLimMin : int, optional
+        Determines the minimum size on the axis Y.
+    yLimMax : int, optional
+        Determines the maximum size on the axis Y.
     figureTitle : str, optional
         Figure title.
     hSize : int, optional
@@ -871,17 +899,14 @@ def HeadOrientation(data, step, head = "", tail = "", **kwargs):
         Determines the arrow color.
     arrow_size : int, optional
         Determines the arrow size.
-
     Returns
     -------
     out : plot
         The output of the function is the figure with the tracking plot of the 
         selected body part.
-
     See Also
     --------
     For more information and usage examples: https://github.com/pyratlib/pyrat
-
     Notes
     -----
     This function was developed based on DLC outputs and is able to support 
@@ -900,6 +925,10 @@ def HeadOrientation(data, step, head = "", tail = "", **kwargs):
     bodyPartBox = kwargs.get('bodyPartBox')
     arrow_color = kwargs.get('arrow_color')
     limit_boundaries = kwargs.get('limit_boundaries')
+    xLimMin = kwargs.get('xLimMin')
+    xLimMax = kwargs.get('xLimMax')
+    yLimMin = kwargs.get('yLimMin')
+    yLimMax = kwargs.get('yLimMax')
     if type(limit_boundaries) == type(None):
       limit_boundaries = False
     if type(bodyPartBox) == type(None):
@@ -956,10 +985,18 @@ def HeadOrientation(data, step, head = "", tail = "", **kwargs):
     boxX = values[:,lista1.index(bodyPartBox+" - x")]
     boxY = values[:,lista1.index(bodyPartBox+" - y")]
 
-    esquerda = boxX.min()
-    direita = boxX.max()
-    baixo = boxY.min()
-    cima = boxY.max()
+    if type(bodyPartBox) == type(None):
+      
+      esquerda = xLimMin
+      direita = xLimMax
+      baixo = yLimMin
+      cima = yLimMax
+    else:
+      
+      esquerda = values[:,lista1.index(bodyPartBox+" - x")].min()
+      direita = values[:,lista1.index(bodyPartBox+" - x")].max()
+      baixo = values[:,lista1.index(bodyPartBox+" - y")].min()
+      cima = values[:,lista1.index(bodyPartBox+" - y")].max()
 
     if limit_boundaries:
         testeX = []
