@@ -1109,8 +1109,12 @@ def SignalSubset(sig_data,freq,fields, **kwargs):
     Returns
     -------
     out : dict
-        Dictionary with the objects/places passed in the input, inside each one will have the channels
-        passed with the subset of the data.
+        if fields = None:
+            return a dictionary with size equal to the list in start_time or end_time lenght, with others
+            dictionaries with the subset in each channel.
+        else:
+            Dictionary with the objects/places passed in the input, inside each one will have the channels
+            passed with the subset of the data.
 
     See Also
     --------
@@ -1136,17 +1140,14 @@ def SignalSubset(sig_data,freq,fields, **kwargs):
             cortes = {}
             for ç,canal in enumerate(sig_data.columns):
                 if type(start_time) == type(None):
-                    for i in range(len(end_time)):
-                        cortes[ç] = sig_data[canal][None:end_time[i]*freq]
-                        dicts[j] = cortes 
+                    cortes[ç] = sig_data[canal][None:end_time[j]*freq]
+                    dicts[j] = cortes 
                 elif type(end_time) == type(None):
-                    for i in range(len(start_time)):
-                        cortes[ç] = sig_data[canal][start_time[i]*freq:None]
-                        dicts[j] = cortes 
+                    cortes[ç] = sig_data[canal][start_time[j]*freq:None]
+                    dicts[j] = cortes 
                 else: 
-                    for i in range(len(start_time)):
-                        cortes[ç] = sig_data[canal][start_time[i]*freq:end_time[i]*freq]
-                        dicts[j] = cortes 
+                    cortes[ç] = sig_data[canal][start_time[j]*freq:end_time[j]*freq]
+                    dicts[j] = cortes
 
     else:
         lista = []
@@ -1171,6 +1172,7 @@ def SignalSubset(sig_data,freq,fields, **kwargs):
 
     return dicts
 
+
 def LFP(data):
     """
     Performs LFP data extraction from a MATLAB file (.mat) and returns all channels arranged in 
@@ -1179,7 +1181,7 @@ def LFP(data):
     Parameters
     ----------
     data : .mat
-        Plexon data in .mat format
+        Plexon data in .mat format.
        
     Returns
     -------
@@ -1348,3 +1350,47 @@ def PlotInteraction(interactions, **kwargs):
     ax.set_xlabel('Time (s)',fontsize=fontsize)
 
     ax.set_ylim([-barHeight,barHeight])
+
+def Blackrock(data_path, freq): 
+    """
+    Transform a Blackrock file (.ns2) to a pandas DataFrame with all LFP channels.
+
+    Parameters
+    ----------
+    data_path : path
+        Str with data path.
+    freq : int
+        Aquisition frequency.
+
+    Returns
+    -------
+    out : pandas DataFrame
+        The output of the function is the figure with the interactions times with fields.
+        
+    See Also
+    --------
+    For more information and usage examples: https://github.com/pyratlib/pyrat
+    """
+    from neo.io import BlackrockIO
+    import numpy as np
+    import pandas as pd 
+
+    reader = BlackrockIO(data_path)
+    seg = reader.read_segment()
+
+    column_name = []
+    time = np.arange(0,len(seg.analogsignals[0])/freq,1/freq)
+    values = np.zeros((len(seg.analogsignals[0]),len(seg.analogsignals[0][0])))
+
+    for i in range(len(seg.analogsignals[0][0])):
+        for ç in range(len(seg.analogsignals[0])):
+            values[ç][i] = float(seg.analogsignals[0][ç][i])
+
+    channels = []
+    for i in range(len(seg.analogsignals[0][0])):
+        channels.append('Channel ' + str(i+1))
+
+    df = pd.DataFrame(values,columns=channels,index= None) 
+    df.insert(0, "Time", time, True)
+
+    return df

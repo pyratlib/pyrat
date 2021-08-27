@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     name = 'pyratlib',         # How you named your package folder (MyLib)
     packages = ['pyratlib'],   # Chose the same as "name"
-    version = '0.4.6',      # Start with a small number and increase it with every change you make
+    version = '0.4.9',      # Start with a small number and increase it with every change you make
     license='MIT',        # Chose a license from here: https://help.github.com/articles/licensing-a-repository
     description = 'PyRat is a user friendly library in python to analyze data from the DeepLabCut. Developed to help researchers unfamiliar with programming can perform animal behavior analysis more simpler.',   # Give a short description about your library
     long_description=long_description,
@@ -17,6 +17,7 @@ setuptools.setup(
     install_requires=[            # I get to this in a second
             'numpy',
             'pandas',
+            'neo'
         ],
     classifiers=[
       'Development Status :: 4 - Beta',      # Chose either "3 - Alpha", "4 - Beta" or "5 - Production/Stable" as the current state of your package
