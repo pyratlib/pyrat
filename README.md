@@ -52,7 +52,7 @@ pyrat (0.x.x, /path/to/pyratlib)
 -----------
 <!-- 
 - Notebook with the t-SNE algorithm. [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tuliofalmeida/pyjama/blob/main/PyJama_JAMA_exemple.ipynb)       -->
-- Notebook tutorial of basic PyRAT:[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/pyratlib/pyrat/blob/main/PyRAT_tutorial.ipynb)
+- Notebook tutorial of basic PyRAT [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/pyratlib/pyrat/blob/main/PyRAT_tutorial.ipynb)
 
 # Development Team:
 ------------
