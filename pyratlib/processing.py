@@ -1172,7 +1172,6 @@ def SignalSubset(sig_data,freq,fields, **kwargs):
 
     return dicts
 
-
 def LFP(data):
     """
     Performs LFP data extraction from a MATLAB file (.mat) and returns all channels arranged in 
