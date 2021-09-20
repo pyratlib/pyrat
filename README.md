@@ -52,21 +52,15 @@ pyrat (0.x.x, /path/to/pyratlib)
 -----------
 <!-- 
 - Notebook with the t-SNE algorithm. [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tuliofalmeida/pyjama/blob/main/PyJama_JAMA_exemple.ipynb)       -->
-- Notebook tutorial of basic PyRAT. [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/pyratlib/pyrat/blob/main/PyRAT_tutorial.ipynb)
+- Notebook tutorial of basic PyRAT:[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/pyratlib/pyrat/blob/main/PyRAT_tutorial.ipynb)
 
 # Development Team:
 ------------
 
-- [Tulio Almeida]
-- [Bruno Spinelli]
-- [Ramon Hypolito]
-- Maria Carolina Gonzalez
-- [Abner Cardoso] 
-
-<!-- Links -->
-[Abner Cardoso]:https://github.com/abnr
-[Bruno Spinelli]:https://github.com/brunospinelli
-[Tulio Almeida]:https://github.com/tuliofalmeida
-[Ramon Hypolito]:https://github.com/ramonhypolito
+- Tulio De Almeida - [GitHub](https://github.com/tuliofalmeida) - [Google Scholar](https://scholar.google.com/citations?user=kkOy-JkAAAAJ&hl=en)
+- Bruno Spinelli - [GitHub](https://github.com/brunospinelli) - [Google Scholar](https://scholar.google.com/)
+- Ramon Hypolito - [GitHub](https://github.com/ramonhypolito) - [Google Scholar](https://scholar.google.com/citations?user=5lKx5GcAAAAJ&hl=pt-BR&oi=ao)
+- Maria Carolina Gonzalez [GitHub](https://github.com/pyratlib) - [Google Scholar](https://scholar.google.com/citations?user=7OXkSPcAAAAJ&hl=pt-BR&oi=ao)
+- Abner Rodrigues - [GitHub](https://github.com/abnr) - [Google Scholar](https://scholar.google.com.br/citations?user=0dTid9EAAAAJ&hl=en)
 
 
