@@ -733,6 +733,17 @@ def Reports(df_list,list_name,bodypart,fields=None,filter=0.3,fps=30):
     out : pandas DataFrame
         DataFrame with report of each data in one line.
 
+    Examples
+    --------
+    DataFrame :
+    >>>> columns = 'file','video time (min)', 'dist (cm)','speed (cm/s)','field','time_field'
+    >>>> file = file name
+    >>>> video time (min) = video duration
+    >>>> dist (cm) = ditance traveled in centimeters
+    >>>> speed (cm/s) = animal velocity in centimeters per second
+    >>>> field = how many times did you interact with the field, organized by order (if fields != None)
+    >>>> time_field = time spent in each field
+
     See Also
     --------
     For more information and usage examples: https://github.com/pyratlib/pyrat
@@ -750,8 +761,8 @@ def Reports(df_list,list_name,bodypart,fields=None,filter=0.3,fps=30):
   
     if type(fields) != type(None):  
         for i in range(len(fields)):
-            relatorio["obj{0}".format(i+1)] = []
-            relatorio["time_obj{0}".format(i+1)] = []
+            relatorio["field_{0}".format(i+1)] = []
+            relatorio["time_field_{0}".format(i+1)] = []
 
     for i,v in enumerate(df_list):
         lista = [list_name[i]]
