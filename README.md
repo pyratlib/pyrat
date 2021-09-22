@@ -62,7 +62,7 @@ pyrat (0.x.x, /path/to/pyratlib)
 - Tulio De Almeida - [GitHub](https://github.com/tuliofalmeida) - [Google Scholar](https://scholar.google.com/citations?user=kkOy-JkAAAAJ&hl=en)
 - Bruno Spinelli - [GitHub](https://github.com/brunospinelli) - [Google Scholar](https://scholar.google.com/)
 - Ramon Hypolito - [GitHub](https://github.com/ramonhypolito) - [Google Scholar](https://scholar.google.com/citations?user=5lKx5GcAAAAJ&hl=pt-BR&oi=ao)
-- Maria Carolina Gonzalez [GitHub](https://github.com/pyratlib) - [Google Scholar](https://scholar.google.com/citations?user=7OXkSPcAAAAJ&hl=pt-BR&oi=ao)
+- Maria Carolina Gonzalez - [GitHub](https://github.com/pyratlib) - [Google Scholar](https://scholar.google.com/citations?user=7OXkSPcAAAAJ&hl=pt-BR&oi=ao)
 - Abner Rodrigues - [GitHub](https://github.com/abnr) - [Google Scholar](https://scholar.google.com.br/citations?user=0dTid9EAAAAJ&hl=en)
 
 
