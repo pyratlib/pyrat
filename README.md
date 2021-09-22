@@ -58,7 +58,7 @@ The data is hosted here in the repository and in [Zenodo](https://zenodo.org/rec
 -----------
 <!-- 
 - Notebook with the t-SNE algorithm. [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tuliofalmeida/pyjama/blob/main/PyJama_JAMA_exemple.ipynb)       -->
-- Basic use [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/pyratlib/pyrat/blob/main/PyRAT_tutorial.ipynb)
+- PyRAT tutorial [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/pyratlib/pyrat/blob/main/PyRAT_tutorial.ipynb)
 
 # Development Team:
 ------------
