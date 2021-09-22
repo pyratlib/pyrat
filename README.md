@@ -49,6 +49,10 @@ By calling `pip list` you should see `pyrat` now as an installed package:
 ```
 pyrat (0.x.x, /path/to/pyratlib)
 ```
+# Data
+------
+
+The data is hosted here in the repository and in [Zenodo](https://zenodo.org/record/5522145)
 
 # Examples
 -----------
