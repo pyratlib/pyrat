@@ -843,9 +843,10 @@ def DrawLine(x, y, angle, **kwargs):
     else:
         return ax.arrow(x, y, arrow_size*np.cos(angle), arrow_size*np.sin(angle),width = arrow_width,head_width=head_width,fc = arrow_color)
 
-def HeadOrientation(data, step, head = "", tail = "", **kwargs):
+def HeadOrientation(data, step, head = None, tail = None, **kwargs):
     """
     Plots the trajectory of the determined body part.
+
     Parameters
     ----------
     data : pandas DataFrame
@@ -910,14 +911,17 @@ def HeadOrientation(data, step, head = "", tail = "", **kwargs):
         Determines the arrow color.
     arrow_size : int, optional
         Determines the arrow size.
+
     Returns
     -------
     out : plot
         The output of the function is the figure with the tracking plot of the 
         selected body part.
+
     See Also
     --------
     For more information and usage examples: https://github.com/pyratlib/pyrat
+
     Notes
     -----
     This function was developed based on DLC outputs and is able to support 
