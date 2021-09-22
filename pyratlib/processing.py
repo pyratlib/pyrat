@@ -1240,6 +1240,7 @@ def LFP(data):
 def PlotInteraction(interactions, **kwargs):
   """
   Plots a bar with interactions times of the determined body with the fields.
+
   Parameters
   ----------
   interactions : pandas DataFrame
@@ -1408,3 +1409,106 @@ def Blackrock(data_path, freq):
     df.insert(0, "Time", time, True)
 
     return df
+
+def ClassifyBehavior(data, bp_1="snout",bp_2="ear_L", bp_3="ear_R", bp_4="tail", dimensions = 2,distance=28,**kwargs):
+    """
+    Returns an array with the cluster by frame, an array with the embedding data in low-dimensional space and the clusterization model.
+    
+    Parameters
+    ----------
+    data : pandas DataFrame
+        The input tracking data.
+    bp_1 : str
+        Body part representing snout.
+    bp_2 : str
+        Body part representing left ear.
+    bp_3 : str
+        Body part representing right ear.
+    bp_4 : str
+        Body part representing tail.
+    dimensions : int
+        Dimension of the embedded space.
+    distance : int
+        The linkage distance threshold above which, clusters will not be merged.
+    startIndex : int, optional
+        Initial index.
+    n_jobs : int, optional
+        The number of parallel jobs to run for neighbors search.
+    verbose : int, optional
+        Verbosity level.
+    perplexity : float, optional
+        The perplexity is related to the number of nearest neighbors that is used in other manifold learning algorithms. Larger datasets usually require a larger perplexity.
+    
+    Returns
+    -------
+    cluster_labels : array
+        Array with the cluster by frame.
+    X_transformed : array
+        Embedding of the training data in low-dimensional space.
+    model : Obj
+        AgglomerativeClustering model.
+    
+    See Also
+    --------
+    For more information and usage examples: https://github.com/pyratlib/pyrat
+    
+    Notes
+    -----
+    This function was developed based on DLC outputs and is able to support 
+    matplotlib configurations."""
+    from sklearn.manifold import TSNE
+    from sklearn.cluster import AgglomerativeClustering
+    from sklearn.preprocessing import StandardScaler
+
+    startIndex = kwargs.get('startIndex')
+    n_jobs = kwargs.get('n_jobs')
+    verbose = kwargs.get('verbose')
+    perplexity = kwargs.get("perplexity")
+    if type(startIndex) == type(None):
+      startIndex = 0
+    if type(n_jobs) == type(None):
+      n_jobs=-1
+    if type(verbose) == type(None):
+      verbose=0
+    if type(perplexity) == type(None):
+      perplexity=500
+    
+    values = (data.iloc[2:,1:].values).astype(np.float)
+    lista1 = (data.iloc[0][1:].values +" - " + data.iloc[1][1:].values).tolist()
+
+    nose = np.concatenate(((values[:,lista1.index(bp_1+" - x")]).reshape(1,-1).T,(values[:,lista1.index(bp_1+" - y")]).reshape(1,-1).T), axis=1)
+    earr = np.concatenate(((values[:,lista1.index(bp_2+" - x")]).reshape(1,-1).T,(values[:,lista1.index(bp_2+" - y")]).reshape(1,-1).T), axis=1)
+    earl = np.concatenate(((values[:,lista1.index(bp_3+" - x")]).reshape(1,-1).T,(values[:,lista1.index(bp_3+" - y")]).reshape(1,-1).T), axis=1)
+    tail = np.concatenate(((values[:,lista1.index(bp_4+" - x")]).reshape(1,-1).T,(values[:,lista1.index(bp_4+" - y")]).reshape(1,-1).T), axis=1)
+
+    bodyparts = [nose, earr, earl, tail]
+    distances = []
+
+    for k in range(len(bodyparts[0])):
+        frame_distances = []
+        for i in range(len(bodyparts)):
+            distance_row = []
+            for j in range( len(bodyparts) ):
+                distance_row.append(np.linalg.norm(bodyparts[i][k] - bodyparts[j][k]))
+            frame_distances.append(distance_row)
+        distances.append(frame_distances)
+
+    distances2 = np.asarray(distances)
+
+    for i in range(4):
+      for k in range(4):
+          distances2[:, i, j] = distances2[:, i, j]/np.max(distances2[:, i, j])
+
+    d = []
+    for i in range(distances2.shape[0]):
+        d.append(distances2[i, np.triu_indices(4, k = 1)[0], np.triu_indices(4, k = 1)[1]])
+    
+    d = StandardScaler().fit_transform(d)
+
+    embedding = TSNE(n_components=dimensions, n_jobs=n_jobs, verbose=verbose, perplexity=perplexity)
+    X_transformed = embedding.fit_transform(d[startIndex:])
+    model = AgglomerativeClustering(n_clusters=None,distance_threshold=distance)
+    model = model.fit(d[startIndex:])
+    cluster_labels = model.labels_    
+
+    return cluster_labels, X_transformed, model
