@@ -1412,7 +1412,8 @@ def Blackrock(data_path, freq):
 
 def ClassifyBehavior(data, bp_1="snout",bp_2="ear_L", bp_3="ear_R", bp_4="tail", dimensions = 2,distance=28,**kwargs):
     """
-    Returns an array with the cluster by frame, an array with the embedding data in low-dimensional space and the clusterization model.
+    Returns an array with the cluster by frame, an array with the embedding data in low-dimensional 
+    space and the clusterization model.
     
     Parameters
     ----------
