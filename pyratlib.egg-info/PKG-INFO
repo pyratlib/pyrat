@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: pyratlib
-Version: 0.5.2
+Version: 0.5.3
 Summary: PyRat is a user friendly library in python to analyze data from the DeepLabCut. Developed to help researchers unfamiliar with programming can perform animal behavior analysis more simpler.
 Home-page: https://github.com/pyratlib/pyrat
 License: MIT
@@ -69,12 +69,16 @@ By calling `pip list` you should see `pyrat` now as an installed package:
 ```
 pyrat (0.x.x, /path/to/pyratlib)
 ```
+# Data
+------
+
+The data is hosted here in the repository and in [Zenodo](https://zenodo.org/record/5522145)
 
 # Examples
 -----------
 <!-- 
 - Notebook with the t-SNE algorithm. [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tuliofalmeida/pyjama/blob/main/PyJama_JAMA_exemple.ipynb)       -->
-- Basic use [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/pyratlib/pyrat/blob/main/PyRAT_tutorial.ipynb)
+- PyRAT tutorial [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/pyratlib/pyrat/blob/main/PyRAT_tutorial.ipynb)
 
 # Development Team:
 ------------

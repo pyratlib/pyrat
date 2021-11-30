@@ -294,6 +294,11 @@ def Heatmap(data, bodyPart, **kwargs):
     fig = kwargs.get('fig')
     bodyPartBox = kwargs.get('bodyPartBox')
     limit_boundaries = kwargs.get('limit_boundaries')
+    xLimMin = kwargs.get('xLimMin')
+    xLimMax = kwargs.get('xLimMax')
+    yLimMin = kwargs.get('yLimMin')
+    yLimMax = kwargs.get('yLimMax')
+
     if type(limit_boundaries) == type(None):
       limit_boundaries = False
     if type(fps) == type(None):
@@ -327,7 +332,6 @@ def Heatmap(data, bodyPart, **kwargs):
     res = kwargs.get('res')
     if type(res) == type(None):
       res = 80  
-
 
     values = (data.iloc[2:,1:].values).astype(np.float)
     lista1 = (data.iloc[0][1:].values +" - " + data.iloc[1][1:].values).tolist()
@@ -370,7 +374,11 @@ def Heatmap(data, bodyPart, **kwargs):
     
     if type(ax) == type(None):
         plt.figure(figsize=(wSize, hSize), dpi=res)
-        plt.hist2d(testeX,testeY, bins = bins, vmax = vmax,cmap=plt.get_cmap(cmapType))
+
+        if type(xLimMin) != type(None):
+            plt.hist2d(testeX,testeY, bins = bins, vmax = vmax,cmap=plt.get_cmap(cmapType), range=[[xLimMin,xLimMax],[yLimMin,yLimMax]])
+        else:
+            plt.hist2d(testeX,testeY, bins = bins, vmax = vmax,cmap=plt.get_cmap(cmapType))
 
         cb = plt.colorbar()
 
@@ -387,7 +395,10 @@ def Heatmap(data, bodyPart, **kwargs):
         if type(saveName) != type(None):
             plt.savefig(saveName+figformat)
     else:
-        ax.hist2d(testeX,testeY, bins = bins, vmax = vmax,cmap=plt.get_cmap(cmapType))
+        if type(xLimMin) != type(None):
+            ax.hist2d(testeX,testeY, bins = bins, vmax = vmax,cmap=plt.get_cmap(cmapType), range=[[xLimMin,xLimMax],[yLimMin,yLimMax]])
+        else:
+            ax.hist2d(testeX,testeY, bins = bins, vmax = vmax,cmap=plt.get_cmap(cmapType))
         ax.tick_params(axis='both', which='major', labelsize=fontsize*0.8)
         ax.set_title(figureTitle, fontsize=fontsize)
         ax.set_xlabel("X (px)", fontsize = fontsize)
