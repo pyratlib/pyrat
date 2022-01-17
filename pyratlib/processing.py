@@ -663,8 +663,10 @@ def Interaction(data,bodyPart,fields,fps=30):
 
     Returns
     -------
-    out : int
+    interactsDf: DataFrame
         DataFrame with all interactions. 0 = no interaction; 1 = first object; 2 = second object...
+    interacts: list
+        List with the interactions without processing.
 
     See Also
     --------
@@ -693,8 +695,9 @@ def Interaction(data,bodyPart,fields,fps=30):
                 if ((dataX[i] - fields['center_x'][j])**2 + (dataY[i] - fields['center_y'][j])**2 <= fields['radius'][j]**2):
                     interact[i] = j +1
             else:
-                if fields['a_x'][j] <= dataX[i] <= (fields['a_x'][j] + fields['width'][j]) and fields['a_y'][j] <= dataY[i] <= (fields['a_y'][j] + fields['height'][j]): 
+                if fields['a_x'][j] <= dataX[i] <= (fields['a_x'][j] + fields['height'][j]) and fields['a_y'][j] <= dataY[i] <= (fields['a_y'][j] + fields['width'][j]):
                     interact[i] = j +1
+
         interactsDf = pd.DataFrame(columns=['start','end','obj'])
 
     obj = 0
@@ -716,7 +719,7 @@ def Interaction(data,bodyPart,fields,fps=30):
     df = pd.DataFrame([[start,end,obj]],columns=['start','end','obj'])
     interactsDf = interactsDf.append(df, ignore_index=True)
 
-    return interactsDf
+    return interactsDf, interact
 
 def Reports(df_list,list_name,bodypart,fields=None,filter=0.3,fps=30):
     """
