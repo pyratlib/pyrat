@@ -2,3 +2,4 @@ numpy
 pandas
 neo
 scikit-learn
+wheel

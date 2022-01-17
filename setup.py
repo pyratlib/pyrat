@@ -1,3 +1,4 @@
+import wheel
 import setuptools
  
 with open("README.md", "r") as fh:
@@ -18,7 +19,8 @@ setuptools.setup(
             'numpy',
             'pandas',
             'neo',
-            'scikit-learn'
+            'scikit-learn',
+            'wheel'
         ],
     classifiers=[
       'Development Status :: 4 - Beta',      # Chose either "3 - Alpha", "4 - Beta" or "5 - Production/Stable" as the current state of your package
