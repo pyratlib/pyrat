@@ -58,7 +58,7 @@ The data is available in [Zenodo](https://zenodo.org/record/5522145)
 -----------
 <!-- 
 - Notebook with the t-SNE algorithm. [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tuliofalmeida/pyjama/blob/main/PyJama_JAMA_exemple.ipynb)       -->
-- PyRAT tutorial [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/pyratlib/pyrat/blob/main/PyRAT_tutorial.ipynb)
+- Basic Usage [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pyratlib/pyrat/blob/main/PyRAT_Basic_Plots.ipynb)
 - Behavior Classification [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pyratlib/pyrat/blob/main/PyRAT_Behavior_Classification.ipynb)
 
 # Development Team:
