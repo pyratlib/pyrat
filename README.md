@@ -52,7 +52,7 @@ pyrat (0.x.x, /path/to/pyratlib)
 # Data
 ------
 
-The data is available in [Zenodo](https://zenodo.org/record/5522145)
+The data is available on [Zenodo](https://doi.org/10.5281/zenodo.5865893)
 
 # Examples
 -----------
