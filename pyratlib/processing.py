@@ -1424,7 +1424,7 @@ def Blackrock(data_path, freq):
 
     return df
 
-def ClassifyBehavior(data, bp_1="snout",bp_2="ear_L", bp_3="ear_R", bp_4="tail", dimensions = 2,distance=28,**kwargs):
+def ClassifyBehavior(data,video, bodyparts_list, dimensions = 2,distance=28,**kwargs):
     """
     Returns an array with the cluster by frame, an array with the embedding data in low-dimensional 
     space and the clusterization model.
@@ -1433,27 +1433,36 @@ def ClassifyBehavior(data, bp_1="snout",bp_2="ear_L", bp_3="ear_R", bp_4="tail",
     ----------
     data : pandas DataFrame
         The input tracking data.
-    bp_1 : str
-        Body part representing snout.
-    bp_2 : str
-        Body part representing left ear.
-    bp_3 : str
-        Body part representing right ear.
-    bp_4 : str
-        Body part representing tail.
+    video : str
+        Video directory
+    bodyparts_list : list
+        List with name of body parts.
     dimensions : int
         Dimension of the embedded space.
     distance : int
         The linkage distance threshold above which, clusters will not be merged.
     startIndex : int, optional
         Initial index.
+    endIndex : int, optional
+        Last index.
     n_jobs : int, optional
         The number of parallel jobs to run for neighbors search.
     verbose : int, optional
         Verbosity level.
     perplexity : float, optional
         The perplexity is related to the number of nearest neighbors that is used in other manifold learning algorithms. Larger datasets usually require a larger perplexity.
-    
+    learning_rate : float, optional
+        t-SNE learning rate.
+    directory : str, optional
+        Path where frame images will be saved.
+    return_metrics : bool, optional
+         Where True, returns t-SNE metrics, otherwise does not return t-SNE metrics.
+    knn_n_neighbors : int, optional
+        Number of neighbors to use by default for kneighbors queries in KNN metric.
+    knc_n_neighbors : int, optional
+        Number of neighbors to use by default for kneighbors queries in KNC metric.
+    n : int, optional
+        Number of N randomly chosen points in CPD metric.
     Returns
     -------
     cluster_labels : array
@@ -1462,6 +1471,14 @@ def ClassifyBehavior(data, bp_1="snout",bp_2="ear_L", bp_3="ear_R", bp_4="tail",
         Embedding of the training data in low-dimensional space.
     model : Obj
         AgglomerativeClustering model.
+    d  : array
+        High dimension data.
+    knn : int, optional
+        The fraction of k-nearest neighbours in the original highdimensional data that are preserved as k-nearest neighbours in the embedding.
+    knc : int, optional
+        The fraction of k-nearest class means in the original data that are preserved as k-nearest class means in the embedding. This is computed for class means only and averaged across all classes.
+    cpd : Obj, optional
+        Spearman correlation between pairwise distances in the high-dimensional space and in the embedding.
     
     See Also
     --------
@@ -1474,29 +1491,59 @@ def ClassifyBehavior(data, bp_1="snout",bp_2="ear_L", bp_3="ear_R", bp_4="tail",
     from sklearn.manifold import TSNE
     from sklearn.cluster import AgglomerativeClustering
     from sklearn.preprocessing import StandardScaler
+    import os
+    import cv2
+    import matplotlib.pyplot as plt
+    from scipy.cluster.hierarchy import dendrogram
+    import numpy as np
+    from sklearn.neighbors import NearestNeighbors
+    from scipy import stats
 
     startIndex = kwargs.get('startIndex')
+    endIndex = kwargs.get('endIndex')
     n_jobs = kwargs.get('n_jobs')
     verbose = kwargs.get('verbose')
     perplexity = kwargs.get("perplexity")
+    learning_rate = kwargs.get("learning_rate")
+    directory = kwargs.get("directory")
+    return_metrics = kwargs.get("return_metrics")
+    knn_n_neighbors = kwargs.get("knn_n_neighbors")
+    knc_n_neighbors = kwargs.get("knc_n_neighbors")
+    n = kwargs.get("n")
+    k = 1
     if type(startIndex) == type(None):
       startIndex = 0
+    if type(endIndex) == type(None):
+      endIndex = data.shape[0]-3
     if type(n_jobs) == type(None):
       n_jobs=-1
     if type(verbose) == type(None):
       verbose=0
     if type(perplexity) == type(None):
-      perplexity=500
+      perplexity = data[startIndex:endIndex].shape[0]//100
+    if type(learning_rate) == type(None):
+      learning_rate = (data[startIndex:endIndex].shape[0]//12)/4
+    if type(directory) == type(None):
+      directory = os.getcwd()
+    if type(return_metrics) == type(None):
+      return_metrics == 0
+    f = 1
+    directory=directory+"/images"
+    for i in range(2,len(directory.split(sep = "/"))):
+      if os.path.exists("/"+"/".join(directory.split(sep = "/")[1:i+1])) == False:
+        f = i
+        break
+    
+    for i in range(f,len(directory.split(sep = "/"))):
+      os.mkdir("/"+"/".join(directory.split(sep = "/")[1:i+1]))
     
     values = (data.iloc[2:,1:].values).astype(np.float)
     lista1 = (data.iloc[0][1:].values +" - " + data.iloc[1][1:].values).tolist()
 
-    nose = np.concatenate(((values[:,lista1.index(bp_1+" - x")]).reshape(1,-1).T,(values[:,lista1.index(bp_1+" - y")]).reshape(1,-1).T), axis=1)
-    earr = np.concatenate(((values[:,lista1.index(bp_2+" - x")]).reshape(1,-1).T,(values[:,lista1.index(bp_2+" - y")]).reshape(1,-1).T), axis=1)
-    earl = np.concatenate(((values[:,lista1.index(bp_3+" - x")]).reshape(1,-1).T,(values[:,lista1.index(bp_3+" - y")]).reshape(1,-1).T), axis=1)
-    tail = np.concatenate(((values[:,lista1.index(bp_4+" - x")]).reshape(1,-1).T,(values[:,lista1.index(bp_4+" - y")]).reshape(1,-1).T), axis=1)
+    bodyparts = []
+    for i in range(len(bodyparts_list)):
+      bodyparts.append(np.concatenate(((values[:,lista1.index(bodyparts_list[i]+" - x")]).reshape(1,-1).T,(values[:,lista1.index(bodyparts_list[i]+" - y")]).reshape(1,-1).T), axis=1))
 
-    bodyparts = [nose, earr, earl, tail]
     distances = []
 
     for k in range(len(bodyparts[0])):
@@ -1510,20 +1557,127 @@ def ClassifyBehavior(data, bp_1="snout",bp_2="ear_L", bp_3="ear_R", bp_4="tail",
 
     distances2 = np.asarray(distances)
 
-    for i in range(4):
-      for k in range(4):
+    for i in range(len(bodyparts)):
+      for k in range(len(bodyparts)):
           distances2[:, i, j] = distances2[:, i, j]/np.max(distances2[:, i, j])
 
     d = []
     for i in range(distances2.shape[0]):
-        d.append(distances2[i, np.triu_indices(4, k = 1)[0], np.triu_indices(4, k = 1)[1]])
+        d.append(distances2[i, np.triu_indices(len(bodyparts), k = 1)[0], np.triu_indices(len(bodyparts), k = 1)[1]])
     
     d = StandardScaler().fit_transform(d)
 
-    embedding = TSNE(n_components=dimensions, n_jobs=n_jobs, verbose=verbose, perplexity=perplexity)
-    X_transformed = embedding.fit_transform(d[startIndex:])
+    embedding = TSNE(n_components=dimensions, n_jobs=n_jobs, verbose=verbose, perplexity=perplexity, random_state = 42, n_iter = 5000, learning_rate=learning_rate, init = "pca", early_exaggeration = 12)
+    X_transformed = embedding.fit_transform(d[startIndex:endIndex])
     model = AgglomerativeClustering(n_clusters=None,distance_threshold=distance)
-    model = model.fit(d[startIndex:])
-    cluster_labels = model.labels_    
+    model = model.fit(d[startIndex:endIndex])
+    cluster_labels = model.labels_   
 
-    return cluster_labels, X_transformed, model
+    frames = data.scorer[2:].values.astype(np.int)
+    for i in np.unique(cluster_labels):
+      os.mkdir(directory+"/cluster"+ str(i))
+
+    vidcap = cv2.VideoCapture(video)
+    success,image = vidcap.read()
+    count = 0
+    position = (10,50)
+    ind = 0
+    while success:
+
+      if (np.isin(count, frames[startIndex:endIndex])):
+          a = cv2.imwrite(directory+"/cluster"+str(model.labels_[ind])+"/frame%d.jpg" % count, image)
+          ind = ind +1 
+      success,image = vidcap.read()
+      count += 1
+
+    for i in np.unique(cluster_labels):
+      plt.bar(i, cluster_labels[cluster_labels==i].shape, color = "C0")
+    plt.xticks(np.arange(model.n_clusters_))
+    plt.xlabel("Clusters")
+    plt.ylabel("Frames")
+    plt.show()
+    counts = np.zeros(model.children_.shape[0])
+    n_samples = len(model.labels_)
+    for i, merge in enumerate(model.children_):
+        current_count = 0
+        for child_idx in merge:
+            if child_idx < n_samples:
+                current_count += 1  # leaf node
+            else:
+                current_count += counts[child_idx - n_samples]
+        counts[i] = current_count
+
+    linkage_matrix = np.column_stack(
+        [model.children_, model.distances_, counts]
+    ).astype(float)
+
+    # Plot the corresponding dendrogram
+    plt.figure(figsize=(10,5))
+    plt.title("Hierarchical Clustering Dendrogram")
+    dendrogram(linkage_matrix, truncate_mode="level", p=3)
+    plt.xlabel("Number of points in node (or index of point if no parenthesis).")
+    plt.show()
+
+    fig, ax = plt.subplots(figsize=(10,10), dpi =80)
+    i = 0
+
+    color = plt.cm.get_cmap("rainbow", model.n_clusters_)
+    for x in range(model.n_clusters_):
+      sel = cluster_labels == x
+      
+      pontos = ax.scatter(X_transformed[sel,0], X_transformed[sel,1], label=str(x), s=1, color = color(i))
+      i = i+1
+
+    plt.legend()
+    plt.title('Clusters')
+    plt.show()
+
+    if return_metrics == 1:
+      if type(knn_n_neighbors) == type(None):
+        knn_n_neighbors = model.n_clusters_//2
+      if type(knc_n_neighbors) == type(None):
+        knc_n_neighbors = model.n_clusters_//2
+      if type(n) == type(None):
+        n = 1000
+      data_HDim = d[startIndex:endIndex]
+      data_emb = X_transformed
+
+      neigh = NearestNeighbors(n_neighbors=knn_n_neighbors)
+      neigh.fit(data_HDim)
+      neigh2 = NearestNeighbors(n_neighbors=knn_n_neighbors)
+      neigh2.fit(data_emb)
+      intersections = 0.0
+      for i in range(len(data_HDim)):
+        intersections += len(set(neigh.kneighbors(data_HDim, return_distance = False)[i]) & set(neigh2.kneighbors(data_emb, return_distance = False)[i]))
+      knn = intersections / len(data_HDim) / knn_n_neighbors
+
+
+      clusters =  len(np.unique(cluster_labels))
+      clusters_HDim = np.zeros((clusters,data_HDim.shape[1]))
+      clusters_tsne = np.zeros((clusters,data_emb.shape[1]))
+      for i in np.unique(cluster_labels):
+        clusters_HDim[i,:] = np.mean(data_HDim[np.unique(cluster_labels, return_inverse=True)[1] == np.unique(cluster_labels, return_inverse=True)[0][i], :], axis = 0)
+        clusters_tsne[i,:] = np.mean(data_emb[np.unique(cluster_labels, return_inverse=True)[1] == np.unique(cluster_labels, return_inverse=True)[0][i], :], axis = 0)
+      neigh = NearestNeighbors(n_neighbors=knc_n_neighbors)
+      neigh.fit(clusters_HDim)
+      neigh2 = NearestNeighbors(n_neighbors=knc_n_neighbors)
+      neigh2.fit(clusters_tsne)
+      intersections = 0.0
+      for i in range(clusters):
+        intersections += len(set(neigh.kneighbors(clusters_HDim, return_distance = False)[i]) & set(neigh2.kneighbors(clusters_tsne, return_distance = False)[i]))
+      knc = intersections / clusters / knc_n_neighbors
+
+
+      dist_alto = np.zeros(n)
+      dist_tsne = np.zeros(n)
+      for i in range(n):
+        a = np.random.randint(0,len(data_HDim), size = 1)
+        b = np.random.randint(0,len(data_HDim), size = 1)
+        dist_alto[i] = np.linalg.norm(data_HDim[a] - data_HDim[b])
+        dist_tsne[i] = np.linalg.norm(data_emb[a] - data_emb[b])
+      cpd = stats.spearmanr(dist_alto, dist_tsne)
+
+      return cluster_labels, data_emb, model, data_HDim, knn, knc, cpd
+
+    else:
+      return cluster_labels, X_transformed, model, d[startIndex:endIndex]
