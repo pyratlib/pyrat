@@ -413,7 +413,7 @@ def Heatmap(data, bodyPart, **kwargs):
         cb = fig.colorbar(im,cax=cax, orientation='vertical')
         cb.ax.tick_params(labelsize=fontsize*0.8)
 
-def ScaleConverter(dado, pixel_max,pixel_min,max_real, min_real=0):
+def pixel2centimeters(data, pixel_max,pixel_min,max_real, min_real=0):
     """
     It performs the pixel conversion to the determined real scale (meter, 
     centimeter, millimeter...).
@@ -445,7 +445,7 @@ def ScaleConverter(dado, pixel_max,pixel_min,max_real, min_real=0):
     This function was developed based on DLC outputs and is able to support 
     matplotlib configurations."""    
 
-    return min_real + ((dado-pixel_min)/(pixel_max-pixel_min)) * (max_real-min_real)
+    return min_real + ((data-pixel_min)/(pixel_max-pixel_min)) * (max_real-min_real)
 
 def MotionMetrics (data,bodyPart,filter=1,fps=30,max_real=60,min_real=0):
     """
@@ -489,8 +489,8 @@ def MotionMetrics (data,bodyPart,filter=1,fps=30,max_real=60,min_real=0):
     dataX = values[:,lista1.index(bodyPart+" - x")]
     dataY = values[:,lista1.index(bodyPart+" - y")]
 
-    dataX = ScaleConverter(dataX,dataX.max(),dataX.min(), max_real,0)
-    dataY = ScaleConverter(dataY,dataY.max(),dataY.min(), min_real,0)
+    dataX = pixel2centimeters(dataX,dataX.max(),dataX.min(), max_real,0)
+    dataY = pixel2centimeters(dataY,dataY.max(),dataY.min(), min_real,0)
 
     time = np.arange(0,((1/fps)*len(dataX)), (1/fps))
     df = pd.DataFrame(time/60, columns = ["Time"])
