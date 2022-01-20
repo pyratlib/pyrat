@@ -1681,3 +1681,51 @@ def ClassifyBehavior(data,video, bodyparts_list, dimensions = 2,distance=28,**kw
 
     else:
       return cluster_labels, X_transformed, model, d[startIndex:endIndex]
+
+
+def SpacialNeuralActivity(neural_data, unit):
+    """
+    Performs the visualizaton of the neural data on pixel space.
+
+    Parameters
+    ----------
+    neural_data : pandas DataFrame
+        a dataframe with the positions of rat in columns: x, y
+        and the number of spikes for each unit in columns:
+        unit_1, ..., unit_n.
+    unit : int
+        The unit (column) to plot.
+        
+    Returns
+    -------
+    out : heatmap (ndarray)
+        The matrix with spike triggered avarages for selected unit.
+
+    See Also
+    --------
+    For more information and usage examples: https://github.com/pyratlib/pyrat
+
+    Notes
+    -----
+    This function was developed based on Fujisawa et al., 2008 data."""
+
+    import numpy as np
+    import pandas as pd
+    
+    neural_data = neural_data.loc[ neural_data['x'] > 100, : ]
+
+    xmin, xmax = neural_data['x'].min(), neural_data['x'].max()
+    ymin, ymax = neural_data['y'].min(), neural_data['y'].max()
+
+    xsteps = np.linspace(xmin, xmax, num=100)
+    ysteps = np.linspace(ymin, ymax, num=100)
+
+    heatmap = np.zeros( (xsteps.shape[0], ysteps.shape[0]) )
+
+    for x in range(xsteps.shape[0]-1):
+        for y in range(ysteps.shape[0]-1):
+            df_tmp = neural_data.loc[ (neural_data['x'] >= xsteps[x]) & (neural_data['x'] < xsteps[x+1]) &
+                                (neural_data['y'] >= ysteps[y]) & (neural_data['y'] < ysteps[y+1]), : ]
+            heatmap[x, y] = df_tmp[unit].sum()
+            
+    return heatmap
