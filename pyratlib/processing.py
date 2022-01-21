@@ -1683,7 +1683,7 @@ def ClassifyBehavior(data,video, bodyparts_list, dimensions = 2,distance=28,**kw
       return cluster_labels, X_transformed, model, d[startIndex:endIndex]
 
 
-def SpacialNeuralActivity(neural_data, unity):
+def SpacialNeuralActivity(neural_data, unit):
     """
     Performs the visualizaton of the neural data on pixel space.
 
@@ -1691,15 +1691,15 @@ def SpacialNeuralActivity(neural_data, unity):
     ----------
     neural_data : pandas DataFrame
         a dataframe with the positions of rat in columns: x, y
-        and the number of spikes for each unity in columns:
-        unity_1, ..., unity_n.
-    unity : int
-        The unity (column) to plot.
+        and the number of spikes for each unit in columns:
+        unit, ..., unit.
+    unit : int
+        The unit (column) to plot.
         
     Returns
     -------
     out : heatmap (ndarray)
-        The matrix with spike triggered avarages for selected unity.
+        The matrix with spike triggered avarages for selected unit.
 
     See Also
     --------
@@ -1726,6 +1726,6 @@ def SpacialNeuralActivity(neural_data, unity):
         for y in range(ysteps.shape[0]-1):
             df_tmp = neural_data.loc[ (neural_data['x'] >= xsteps[x]) & (neural_data['x'] < xsteps[x+1]) &
                                 (neural_data['y'] >= ysteps[y]) & (neural_data['y'] < ysteps[y+1]), : ]
-            heatmap[x, y] = df_tmp[unity].sum()
+            heatmap[x, y] = df_tmp[unit].sum()
             
     return heatmap
