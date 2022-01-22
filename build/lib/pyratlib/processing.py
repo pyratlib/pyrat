@@ -3,14 +3,14 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib import cm
 
-def Trajectory(data,bodyPartTraj,bodyPartBox = None, **kwargs):
+def Trajectory(data,bodyPart,bodyPartBox = None, **kwargs):
     """
     Plots the trajectory of the determined body part.
     Parameters
     ----------
     data : pandas DataFrame
         The input tracking data.
-    bodyPartTraj : str
+    bodyPart : str
         Body part you want to plot the tracking.
     bodyPartBox : str
         The body part you want to use to estimate the limits of the environment, 
@@ -121,13 +121,13 @@ def Trajectory(data,bodyPartTraj,bodyPartBox = None, **kwargs):
     lista1 = (data.iloc[0][1:].values +" - " + data.iloc[1][1:].values).tolist()
 
     if type(start) == type(None):
-        x = values[:,lista1.index(bodyPartTraj+" - x")]
-        y = values[:,lista1.index(bodyPartTraj+" - y")]
+        x = values[:,lista1.index(bodyPart+" - x")]
+        y = values[:,lista1.index(bodyPart+" - y")]
     else:
         init = int(start*fps)
         finish = int(end*fps)
-        x = values[:,lista1.index(bodyPartTraj+" - x")][init:finish]
-        y = values[:,lista1.index(bodyPartTraj+" - y")][init:finish]
+        x = values[:,lista1.index(bodyPart+" - x")][init:finish]
+        y = values[:,lista1.index(bodyPart+" - y")][init:finish]
 
 
     cmap = plt.get_cmap(cmapType)

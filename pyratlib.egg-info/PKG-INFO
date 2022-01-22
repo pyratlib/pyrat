@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: pyratlib
-Version: 0.6.1
+Version: 0.6.2
 Summary: PyRat is a user friendly library in python to analyze data from the DeepLabCut. Developed to help researchers unfamiliar with programming can perform animal behavior analysis more simpler.
 Home-page: https://github.com/pyratlib/pyrat
 License: MIT
@@ -68,6 +68,9 @@ Description: [![downloads](https://img.shields.io/pypi/dm/pyratlib?color=blue&st
         - Basic Usage [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pyratlib/pyrat/blob/main/PyRAT_Basic_Plots.ipynb)
         - Behavior Classification [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pyratlib/pyrat/blob/main/PyRAT_Behavior_Classification.ipynb)
         - Metrics in mice [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pyratlib/pyrat/blob/main/PyRAT_Mice.ipynb)
+        - Neural Data example [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/pyratlib/pyrat/blob/main/PyRAT_Neural_Data.ipynb)
+        
+        
         
         
         # Development Team:
