@@ -1099,6 +1099,8 @@ def HeadOrientation(data, step, head = None, tail = None, **kwargs):
         if type(saveName) != type(None):
             plt.savefig(saveName+figformat)
 
+        plt.show()
+
     else:
         ax.set_aspect('equal')
         for i in range(0,len(tailY),step):
@@ -1363,9 +1365,12 @@ def PlotInteraction(interactions, **kwargs):
     plt.xticks(fontsize = fontsize*0.8)
     plt.xlabel("Time (s)",fontsize=fontsize)
     plt.ylim([-barHeight,barHeight])
-    plt.show()
+
     if type(saveName) != type(None):
         plt.savefig(saveName+figformat)
+
+    plt.show()
+
   else:
     for i in range (1,int(interactions.obj.max())+1):
       ax.barh(0,times[i], left=starts[i], height = barHeight, label = "Field "+str(i))
@@ -1613,7 +1618,6 @@ def ClassifyBehavior(data,video, bodyparts_list, dimensions = 2,distance=28,**kw
         [model.children_, model.distances_, counts]
     ).astype(float)
 
-    # Plot the corresponding dendrogram
     plt.figure(figsize=(10,5))
     plt.title("Hierarchical Clustering Dendrogram")
     dendrogram(linkage_matrix, truncate_mode="level", p=3)
