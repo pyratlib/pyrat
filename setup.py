@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     name = 'pyratlib',         
     packages = ['pyratlib'],   
-    version = '0.6.2',      
+    version = '0.6.3',      
     license='MIT',       
     description = 'PyRat is a user friendly library in python to analyze data from the DeepLabCut. Developed to help researchers unfamiliar with programming can perform animal behavior analysis more simpler.',   # Give a short description about your library
     long_description=long_description,

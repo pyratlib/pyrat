@@ -186,10 +186,11 @@ def Trajectory(data,bodyPart,bodyPartBox = None, **kwargs):
         plt.ylabel("Y (px)",fontsize=fontsize)
         plt.xticks(fontsize = fontsize*0.8)
         plt.yticks(fontsize = fontsize*0.8)
-        plt.show()
 
         if type(saveName) != type(None):
             plt.savefig(saveName+figformat)
+
+        plt.show()
 
     else:
         ax.set_aspect('equal')
@@ -390,10 +391,11 @@ def Heatmap(data, bodyPart, **kwargs):
         plt.yticks(fontsize = fontsize*0.8)
         if invertY == True:
             plt.gca().invert_yaxis()
-        plt.show()
 
         if type(saveName) != type(None):
             plt.savefig(saveName+figformat)
+
+        plt.show()
     else:
         if type(xLimMin) != type(None):
             ax.hist2d(testeX,testeY, bins = bins, vmax = vmax,cmap=plt.get_cmap(cmapType), range=[[xLimMin,xLimMax],[yLimMin,yLimMax]])
