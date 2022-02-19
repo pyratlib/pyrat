@@ -1735,3 +1735,63 @@ def SpacialNeuralActivity(neural_data, unit):
             heatmap[x, y] = df_tmp[unit].sum()
             
     return heatmap
+
+def interval_behaviors(cluster_labels, fps=30 , filter = 10, correction = 0):
+    """
+    Extract the subsets of behaviors from ClassifyBehavior() function. This 
+    time stamps must be applied in function SingalSusbset().
+
+    Parameters
+    ----------
+    cluster_labels : ndarray
+        output from ClassifyBehavior.
+    fps : int
+        Video frame per second rate.
+    filter: int 
+        The maximum size of intervals allowed between frames found in 
+        clusters.
+    correction: int
+        Used to correct the synchronization between the frames and the 
+        neural data, if the entire video has not been passed to the 
+        ClassifyBehavior() function. The correction value will be the 
+        same as the 'startIndex' parameter
+        
+    Returns
+    -------
+    out : dict
+        Dictionary with the cluster number as key and the timestamps in
+        seconds.
+
+    See Also
+    --------
+    For more information and usage examples: https://github.com/pyratlib/pyrat
+    """
+
+    cluster_num = set(cluster_labels)
+    intervals = {}
+    for ç in cluster_num:
+
+        index = np.where(cluster_labels==ç)
+
+        dicts = {}
+        dicts2 = {}
+        count = 0
+        init = []
+        end = []
+
+        for i in range(len(index[0])-1):
+                if index[0][i+1] - index[0][i] <=filter:
+                    count +=1    
+                if index[0][i+1] - index[0][i] >filter:
+                    dicts[i] = index[0][i] + correction
+                    dicts2[i] = index[0][i] - count + correction
+                    count = 0
+
+        for i in range(len(list(zip(dicts2.values(),dicts.values())))):
+            if list(zip(dicts2.values(),dicts.values()))[i][0] != list(zip(dicts2.values(),dicts.values()))[i][1]:
+                init.append(int(list(zip(dicts2.values(),dicts.values()))[i][0]/fps))
+                end.append(int(list(zip(dicts2.values(),dicts.values()))[i][1]/fps))
+
+        intervals[ç] = (init,end)
+    
+    return intervals
