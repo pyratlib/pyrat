@@ -550,7 +550,7 @@ def FieldDetermination(Fields=1,plot=False,**kwargs):
           plot
         Plot of objects created for ease of use.
 
-    Examples
+    Example
     --------
     Dictionary :
     >>>> posições = {'circ': [0,200,200,50,0  ,0  ,0 ,0 ],
@@ -1761,6 +1761,41 @@ def IntervalBehaviors(cluster_labels, fps=30 , filter = 10, correction = 0):
     out : dict
         Dictionary with the cluster number as key and the timestamps in
         seconds.
+
+    Example
+    --------
+    ClassifyBehavior
+
+    >>>> cluster_labels, data_emb, model, data_high = rat.ClassifyBehavior(df,
+    >>>>                                                                   video ='/content/video.AVI',
+    >>>>                                                                   bodyparts_list=["nose", "neck", "center", "tail"],
+    >>>>                                                                   n_components = 2, 
+    >>>>                                                                   distance = 28,
+    >>>>                                                                   directory = "/content/images_rat")
+
+    Interval behaviors
+
+    >>>> intervals = IntervalBehaviors(cluster_labels)
+    >>>> intervals (showing only cluster 0 intervals)
+    >>>> {0: ([1113, 3957, 4098, 4167, 4609, 4827],
+    >>>> [1157, 3976, 4137, 4218, 4734, 4860]),
+
+    SignalSubset
+
+    >>>> subset = rat.SignalSubset(dados,1000, start_time = intervalos[0][0], end_time = intervalos[0][1])
+    >>>> subset (showing subsets of cluster 0)
+    >>>> {0: {0: 37000    37.000
+    >>>> 37001    37.001
+    >>>> 37002    37.002
+    >>>> 37003    37.003
+    >>>> 37004    37.004
+            ...  
+    >>>> 37995    37.995
+    >>>> 37996    37.996
+    >>>> 37997    37.997
+    >>>> 37998    37.998
+    >>>> 37999    37.999
+    >>>> Name: Time, Length: 1000, dtype: float64, 1: 37000   -143.25
 
     See Also
     --------
