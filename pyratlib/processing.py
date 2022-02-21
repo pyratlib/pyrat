@@ -1782,7 +1782,7 @@ def IntervalBehaviors(cluster_labels, fps=30 , filter = 10, correction = 0):
 
     SignalSubset
 
-    >>>> subset = rat.SignalSubset(dados,1000, start_time = intervalos[0][0], end_time = intervalos[0][1])
+    >>>> subset = rat.SignalSubset(dados,1000, start_time = intervals[0][0], end_time = intervals[0][1])
     >>>> subset (showing subsets of cluster 0)
     >>>> {0: {0: 37000    37.000
     >>>> 37001    37.001
