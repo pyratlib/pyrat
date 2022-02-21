@@ -1766,16 +1766,16 @@ def IntervalBehaviors(cluster_labels, fps=30 , filter = 10, correction = 0):
     --------
     ClassifyBehavior
 
-    >>>> cluster_labels, data_emb, model, data_high = rat.ClassifyBehavior(df,
-    >>>>                                                                   video ='/content/video.AVI',
-    >>>>                                                                   bodyparts_list=["nose", "neck", "center", "tail"],
-    >>>>                                                                   n_components = 2, 
-    >>>>                                                                   distance = 28,
-    >>>>                                                                   directory = "/content/images_rat")
+    >>>> cluster_labels, _, _, _ = rat.ClassifyBehavior(df,
+                                                        video ='/content/video.AVI',
+                                                        bodyparts_list=["nose", "neck", "center", "tail"],
+                                                        n_components = 2, 
+                                                        distance = 28,
+                                                        directory = "/content/images_rat")
 
     Interval behaviors
 
-    >>>> intervals = IntervalBehaviors(cluster_labels)
+    >>>> intervals = rat.IntervalBehaviors(cluster_labels)
     >>>> intervals (showing only cluster 0 intervals)
     >>>> {0: ([1113, 3957, 4098, 4167, 4609, 4827],
     >>>> [1157, 3976, 4137, 4218, 4734, 4860]),
