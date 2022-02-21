@@ -1736,7 +1736,7 @@ def SpacialNeuralActivity(neural_data, unit):
             
     return heatmap
 
-def interval_behaviors(cluster_labels, fps=30 , filter = 10, correction = 0):
+def IntervalBehaviors(cluster_labels, fps=30 , filter = 10, correction = 0):
     """
     Extract the subsets of behaviors from ClassifyBehavior() function. This 
     time stamps must be applied in function SingalSusbset().
