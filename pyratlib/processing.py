@@ -2294,11 +2294,11 @@ def multi2single(data,animal,**kwargs):
         drop = False
 
     data = rat._splitMultiAnimal(data,
-                             animals = animals,
-                             bodyParts=bodyParts,
-                             start=start,
-                             end=end,
-                             fps=fps)
+                                 animals=animals,
+                                 bodyParts=bodyParts,
+                                 start=start,
+                                 end=end,
+                                 fps=fps)
     
     parts = list(np.repeat(list(data[animal].keys()),3))
     coord = ['x','y','likelihood']*len(list(data[animal].keys()))

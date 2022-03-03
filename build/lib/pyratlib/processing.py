@@ -2187,6 +2187,9 @@ def _splitMultiAnimal(data,**kwargs):
     -----
     This function was developed based on DLC multianimal output."""
 
+    import numpy as np
+    import pandas as pd
+
     animals = kwargs.get('animals')
     bodyParts = kwargs.get('animals')
     start= kwargs.get('start')
@@ -2278,6 +2281,7 @@ def multi2single(data,animal,**kwargs):
 
     import numpy as np
     import pandas as pd
+    import pyratlib as rat
 
     animals = kwargs.get('animals')
     bodyParts = kwargs.get('bodyParts')
