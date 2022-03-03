@@ -117,7 +117,7 @@ def Trajectory(data,bodyPart,bodyPartBox = None, **kwargs):
     if type(res) == type(None):
       res = 80  
 
-    values = (data.iloc[2:,1:].values).astype(np.float)
+    values = (data.iloc[2:,1:].values).astype(float)
     lista1 = (data.iloc[0][1:].values +" - " + data.iloc[1][1:].values).tolist()
 
     if type(start) == type(None):
@@ -334,7 +334,7 @@ def Heatmap(data, bodyPart, **kwargs):
     if type(res) == type(None):
       res = 80  
 
-    values = (data.iloc[2:,1:].values).astype(np.float)
+    values = (data.iloc[2:,1:].values).astype(float)
     lista1 = (data.iloc[0][1:].values +" - " + data.iloc[1][1:].values).tolist()
 
     esquerda = values[:,lista1.index(bodyPartBox+" - x")].min()
@@ -352,34 +352,34 @@ def Heatmap(data, bodyPart, **kwargs):
         y = values[:,lista1.index(bodyPart+" - y")][init:finish]
 
     if limit_boundaries:
-        testeX = []
+        xx = []
         for i in range(len(x)):
             if x[i] >= direita:
-                testeX.append(direita)
+                xx.append(direita)
             elif x[i] <= esquerda:
-                testeX.append(esquerda)
+                xx.append(esquerda)
             else:
-                testeX.append(x[i])
+                xx.append(x[i])
         
-        testeY = []
+        yy = []
         for i in range(len(x)):
             if y[i] >= cima:
-                testeY.append(cima)
+                yy.append(cima)
             elif y[i] <= baixo:
-                testeY.append(baixo)
+                yy.append(baixo)
             else:
-                testeY.append(y[i])
+                yy.append(y[i])
     else:
-        testeX = x
-        testeY = y
+        xx = x
+        yy = y
     
     if type(ax) == type(None):
         plt.figure(figsize=(wSize, hSize), dpi=res)
 
         if type(xLimMin) != type(None):
-            plt.hist2d(testeX,testeY, bins = bins, vmax = vmax,cmap=plt.get_cmap(cmapType), range=[[xLimMin,xLimMax],[yLimMin,yLimMax]])
+            plt.hist2d(xx,yy, bins = bins, vmax = vmax,cmap=plt.get_cmap(cmapType), range=[[xLimMin,xLimMax],[yLimMin,yLimMax]])
         else:
-            plt.hist2d(testeX,testeY, bins = bins, vmax = vmax,cmap=plt.get_cmap(cmapType))
+            plt.hist2d(xx,yy, bins = bins, vmax = vmax,cmap=plt.get_cmap(cmapType))
 
         cb = plt.colorbar()
 
@@ -398,9 +398,9 @@ def Heatmap(data, bodyPart, **kwargs):
         plt.show()
     else:
         if type(xLimMin) != type(None):
-            ax.hist2d(testeX,testeY, bins = bins, vmax = vmax,cmap=plt.get_cmap(cmapType), range=[[xLimMin,xLimMax],[yLimMin,yLimMax]])
+            ax.hist2d(xx,yy, bins = bins, vmax = vmax,cmap=plt.get_cmap(cmapType), range=[[xLimMin,xLimMax],[yLimMin,yLimMax]])
         else:
-            ax.hist2d(testeX,testeY, bins = bins, vmax = vmax,cmap=plt.get_cmap(cmapType))
+            ax.hist2d(xx,yy, bins = bins, vmax = vmax,cmap=plt.get_cmap(cmapType))
         ax.tick_params(axis='both', which='major', labelsize=fontsize*0.8)
         ax.set_title(figureTitle, fontsize=fontsize)
         ax.set_xlabel("X (px)", fontsize = fontsize)
@@ -411,7 +411,7 @@ def Heatmap(data, bodyPart, **kwargs):
         divider = make_axes_locatable(ax)
         cax = divider.append_axes('right',size='5%', pad=0.05)
 
-        im = ax.imshow([testeX,testeY], cmap=plt.get_cmap(cmapType))
+        im = ax.imshow([xx,yy], cmap=plt.get_cmap(cmapType))
         cb = fig.colorbar(im,cax=cax, orientation='vertical')
         cb.ax.tick_params(labelsize=fontsize*0.8)
 
@@ -485,7 +485,7 @@ def MotionMetrics (data,bodyPart,filter=1,fps=30,max_real=60,min_real=0):
     import numpy as np
     import pandas as pd
 
-    values = (data.iloc[2:,1:].values).astype(np.float)
+    values = (data.iloc[2:,1:].values).astype(float)
     lista1 = (data.iloc[0][1:].values +" - " + data.iloc[1][1:].values).tolist()
 
     dataX = values[:,lista1.index(bodyPart+" - x")]
@@ -589,7 +589,7 @@ def FieldDetermination(Fields=1,plot=False,**kwargs):
     circle = []
     rect = []
     if plot:
-        values = (data.iloc[2:,1:].values).astype(np.float)
+        values = (data.iloc[2:,1:].values).astype(float)
         lista1 = (data.iloc[0][1:].values +" - " + data.iloc[1][1:].values).tolist()
         ax = plt.gca()
         esquerda = values[:,lista1.index(bodyPartBox+" - x")].min()
@@ -682,7 +682,7 @@ def Interaction(data,bodyPart,fields,fps=30):
     import numpy as np
     import pandas as pd
 
-    values = (data.iloc[2:,1:].values).astype(np.float)
+    values = (data.iloc[2:,1:].values).astype(float)
     lista1 = (data.iloc[0][1:].values +" - " + data.iloc[1][1:].values).tolist()
 
     dataX = values[:,lista1.index(bodyPart+" - x")]
@@ -994,7 +994,7 @@ def HeadOrientation(data, step, head = None, tail = None, **kwargs):
     if type(arrow_size) == type(None):
       arrow_size = 10
 
-    values = (data.iloc[2:,1:].values).astype(np.float)
+    values = (data.iloc[2:,1:].values).astype(float)
     lista1 = (data.iloc[0][1:].values +" - " + data.iloc[1][1:].values).tolist()
 
     if type(start) == type(None):
@@ -1544,7 +1544,7 @@ def ClassifyBehavior(data,video, bodyparts_list, dimensions = 2,distance=28,**kw
     for i in range(f,len(directory.split(sep = "/"))):
       os.mkdir("/"+"/".join(directory.split(sep = "/")[1:i+1]))
     
-    values = (data.iloc[2:,1:].values).astype(np.float)
+    values = (data.iloc[2:,1:].values).astype(float)
     lista1 = (data.iloc[0][1:].values +" - " + data.iloc[1][1:].values).tolist()
 
     bodyparts = []
@@ -1830,3 +1830,496 @@ def IntervalBehaviors(cluster_labels, fps=30 , filter = 10, correction = 0):
         intervals[ç] = (init,end)
     
     return intervals
+
+def TrajectoryMA(data,bodyPart,bodyPartBox = None, **kwargs):
+    """
+    Plots the trajectory of the determined body part.
+    The input file MUST BE the .h5 format!
+
+    Parameters
+    ----------
+    data : pandas DataFrame
+        The input tracking data in h5/hdf format.
+    bodyPart : str
+        Body part you want to plot the tracking.
+    bodyPartBox : str
+        The body part you want to use to estimate the limits of the environment, 
+        usually the base of the tail is the most suitable for this determination.
+    animals: list
+        If you have multi-animal data and want to plot only one, just pass in this 
+        variable a list with the name of the designated animal (e.g. animals ['rat1']). 
+        This will allow you to plot using 'fig,axs' and plot the animals separately.
+    start : int, optional
+        Moment of the video you want tracking to start, in seconds. If the variable 
+        is empty (None), the entire video will be processed.
+    end : int, optional
+        Moment of the video you want tracking to end, in seconds. If the variable is 
+        empty (None), the entire video will be processed.
+    fps : int
+        The recording frames per second.
+    cmapType : str, optional
+        matplotlib colormap.
+    figureTitle : str, optional
+        Figure title.
+    hSize : int, optional
+        Determine the figure height size (x).
+    wSize : int, optional
+        Determine the figure width size (y).
+    fontsize : int, optional
+        Determine of all font sizes.
+    invertY : bool, optional
+        Determine if de Y axis will be inverted (used for DLC output).
+    limit_boundaries : bool, optional.
+        Limits the points to the box boundary.
+    xLimMin : int, optional
+      Determines the minimum size on the axis X.
+    xLimMax : int, optional
+        Determines the maximum size on the axis X.
+    yLimMin : int, optional
+        Determines the minimum size on the axis Y.
+    yLimMax : int, optional
+        Determines the maximum size on the axis Y.
+    saveName : str, optional
+        Determine the save name of the plot.        
+    figformat : str, optional
+        Determines the type of file that will be saved. Used as base the ".eps", 
+        which may be another supported by matplotlib. 
+    res : int, optional
+        Determine the resolutions (dpi), default = 80.
+    ax : fig, optional
+        Creates an 'axs' to be added to a figure created outside the role by the user.
+    fig : fig, optional
+        Creates an 'fig()' to be added to a figure created outside the role by the user.
+    joint_plot bool, optional
+        If true it will plot all trajectories in a single plot, ideal for multi-animal 
+        tracking of several setups (eg. openfield). If false, will plot each animal 
+        separately.
+
+    Returns
+    -------
+    out : plot
+        The output of the function is the figure with the tracking plot of the 
+        selected body part.
+
+    See Also
+    --------
+    For more information and usage examples: https://github.com/pyratlib/pyrat
+
+    Notes
+    -----
+    This function was developed based on DLC outputs and is able to support 
+    matplotlib configurations."""
+
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import pandas as pd
+    from matplotlib import cm
+    from mpl_toolkits.axes_grid1 import make_axes_locatable
+
+    saveName= kwargs.get('saveName')
+    start= kwargs.get('start')
+    end= kwargs.get('end')
+    figureTitle = kwargs.get('figureTitle')
+    fps = kwargs.get('fps')
+    ax = kwargs.get('ax')
+    limit_boundaries = kwargs.get('limit_boundaries')
+    xLimMin = kwargs.get('xLimMin')
+    xLimMax = kwargs.get('xLimMax')
+    yLimMin = kwargs.get('yLimMin')
+    yLimMax = kwargs.get('yLimMax')
+    joint_plot = kwargs.get('joint_plot')
+    animals = kwargs.get('animals')
+
+    if type(limit_boundaries) == type(None):
+      limit_boundaries = False
+    fig = kwargs.get('fig')
+    if type(fps) == type(None):
+      fps = 30
+    cmapType = kwargs.get('cmapType')
+    if type(cmapType) == type(None):
+      cmapType = 'viridis'
+    hSize = kwargs.get('hSize')
+    if type(hSize) == type(None):
+      hSize = 6
+    wSize = kwargs.get('wSize')
+    if type(wSize) == type(None):
+      wSize = 8
+    bins = kwargs.get('bins')
+    if type(bins) == type(None):
+      bins = 30
+    fontsize = kwargs.get('fontsize')
+    if type(fontsize) == type(None):
+      fontsize = 15
+    invertY = kwargs.get('invertY')
+    if type(invertY) == type(None):
+      invertY = True
+    figformat = kwargs.get('figformat')
+    if type(figformat) == type(None):
+      figformat = '.eps'
+    res = kwargs.get('res')
+    if type(res) == type(None):
+      res = 80
+    if type(joint_plot) == type(None):
+      joint_plot = False
+
+    
+    if type(animals) == type(None):
+        animals = list(set([i[0] for i in list(set(data[data.columns[0][0]].columns))]))
+
+    animals_data = {}
+
+    c = []
+    esquerda = []
+    direita = []
+    baixo = []
+    cima = []
+    x = []
+    y = []
+
+    cmap = plt.get_cmap(cmapType)
+
+    for i,animal in enumerate(animals):
+        temp = data[data.columns[0][0]][animal][bodyPart].iloc[:,0:3]
+        temp = temp.dropna()
+
+        if type(start) == type(None) and type(end) == type(None):
+            animals_data[animal] = ((temp['x'].values).astype(float),
+                              (temp['y'].values).astype(float),
+                              (temp['likelihood'].values).astype(float))
+        else:
+            if type(start) == type(None):
+                finish = int(end[i]*fps)
+                animals_data[animal] = ((temp['x'][None:finish].values).astype(float),
+                                      (temp['y'][None:finish].values).astype(float),
+                                      (temp['likelihood'][None:finish].values).astype(float))
+            elif type(end) == type(None):
+                init = int(start[i]*fps)
+                animals_data[animal] = ((temp['x'][init:None].values).astype(float),
+                                      (temp['y'][init:None].values).astype(float),
+                                      (temp['likelihood'][init:None].values).astype(float))
+            else:     
+                init = int(start[i]*fps)
+                finish = int(end[i]*fps)
+                animals_data[animal] = ((temp['x'][init:finish].values).astype(float),
+                                      (temp['y'][init:finish].values).astype(float),
+                                      (temp['likelihood'][init:finish].values).astype(float)) 
+
+        if type(bodyPartBox) == type(None):
+            c.append(np.linspace(0, animals_data[animal][0].size/fps, animals_data[animal][0].size))
+            esquerda = xLimMin
+            direita = xLimMax
+            baixo = yLimMin
+            cima = yLimMax
+        else:
+            c.append(np.linspace(0, animals_data[animal][0].size/fps, animals_data[animal][0].size))
+            esquerda.append(animals_data[animal][0].min())
+            direita.append(animals_data[animal][0].max())
+            baixo.append(animals_data[animal][1].min())
+            cima.append(animals_data[animal][1].max())
+
+        x_temp = []
+        y_temp = []
+        
+        if limit_boundaries:
+            for ç in range(len(animals_data[animal][0])):
+                if animals_data[animal][0][ç] >= direita[i]:
+                    x_temp.append(direita[i])
+                elif animals_data[animal][0][ç] <= esquerda[i]:
+                    x_temp.append(esquerda[i])
+                else:
+                    x_temp.append(animals_data[animal][0][ç])
+            
+            for ç in range(len(animals_data[animal][1])):
+                if animals_data[animal][1][ç] >= cima[i]:
+                    y_temp.append(cima[i])
+                elif animals_data[animal][1][ç] <= baixo[i]:
+                    y_temp.append(baixo[i])
+                else:
+                    y_temp.append(animals_data[animal][1][ç])
+                    
+            x.append(x_temp)
+            y.append(y_temp)
+
+        else:
+            x.append(animals_data[animal][0])
+            y.append(animals_data[animal][1])
+
+    if type(ax) == type(None):
+        if joint_plot:
+            plt.figure(figsize=(wSize, hSize), dpi=res)
+            plt.title(figureTitle, fontsize=fontsize)
+            for i,animal in enumerate(animals):
+                plt.scatter(x[i], y[i], c=c[i], cmap=cmap, s=3)
+                plt.plot([esquerda[i],esquerda[i]] , [baixo[i],cima[i]],"k")
+                plt.plot([esquerda[i],direita[i]]  , [cima[i],cima[i]],"k")
+                plt.plot([direita[i],direita[i]]   , [cima[i],baixo[i]],"k")
+                plt.plot([direita[i],esquerda[i]]  , [baixo[i],baixo[i]],"k")
+            cb = plt.colorbar()
+
+            if invertY == True:
+                plt.gca().invert_yaxis()
+            cb.set_label('Time (s)',fontsize=fontsize)
+            cb.ax.tick_params(labelsize=fontsize*0.8)
+            plt.xlabel("X (px)",fontsize=fontsize)
+            plt.ylabel("Y (px)",fontsize=fontsize)
+            plt.xticks(fontsize = fontsize*0.8)
+            plt.yticks(fontsize = fontsize*0.8)
+
+            if type(saveName) != type(None):
+                plt.savefig(saveName+figformat)
+
+            plt.show()
+
+        else:
+
+            for i,animal in enumerate(animals):
+                plt.figure(figsize=(wSize, hSize), dpi=res)
+                plt.title(str(animal), fontsize=fontsize)
+                plt.scatter(x[i], y[i], c=c[i], cmap=cmap, s=3)
+                plt.plot([esquerda[i],esquerda[i]] , [baixo[i],cima[i]],"k")
+                plt.plot([esquerda[i],direita[i]]  , [cima[i],cima[i]],"k")
+                plt.plot([direita[i],direita[i]]   , [cima[i],baixo[i]],"k")
+                plt.plot([direita[i],esquerda[i]]  , [baixo[i],baixo[i]],"k")
+                cb = plt.colorbar()
+
+                if invertY == True:
+                    plt.gca().invert_yaxis()
+                cb.set_label('Time (s)',fontsize=fontsize)
+                cb.ax.tick_params(labelsize=fontsize*0.8)
+                plt.xlabel("X (px)",fontsize=fontsize)
+                plt.ylabel("Y (px)",fontsize=fontsize)
+                plt.xticks(fontsize = fontsize*0.8)
+                plt.yticks(fontsize = fontsize*0.8)
+                plt.xlim((esquerda[i],direita[i]))
+                plt.ylim((baixo[i],cima[i]))
+
+                if type(saveName) != type(None):
+                    plt.savefig(saveName+figformat)
+
+                plt.show()
+
+    else:
+        if joint_plot:
+
+            ax.set_title(figureTitle, fontsize=fontsize)
+            for i,animal in enumerate(animals):
+                plot = ax.scatter(x[i], y[i], c=c[i], cmap=cmap, s=3)
+                ax.plot([esquerda[i],esquerda[i]] , [baixo[i],cima[i]],"k")
+                ax.plot([esquerda[i],direita[i]]  , [cima[i],cima[i]],"k")
+                ax.plot([direita[i],direita[i]]   , [cima[i],baixo[i]],"k")
+                ax.plot([direita[i],esquerda[i]]  , [baixo[i],baixo[i]],"k")
+
+            if invertY == True:
+                ax.invert_yaxis()
+            divider = make_axes_locatable(ax)
+            cax = divider.append_axes('right',size='5%', pad=0.05)
+            cb = fig.colorbar(plot,cax=cax)
+            cb.set_label(label='Time (s)', fontsize=fontsize)
+            cb.ax.tick_params(labelsize=fontsize*0.8)
+            ax.set_xlabel("X (px)", fontsize = fontsize)
+            ax.set_ylabel("Y (px)", fontsize = fontsize)
+            cb.ax.tick_params(labelsize=fontsize*0.8)
+
+            if type(saveName) != type(None):
+                plt.savefig(saveName+figformat)
+
+            plt.show()
+
+        else:
+
+            ax.set_aspect('equal')
+            plot = ax.scatter(x, y, c=c, cmap=cmap, s=3)
+            ax.plot([esquerda,esquerda] , [baixo,cima],"k")
+            ax.plot([esquerda,direita]  , [cima,cima],"k")
+            ax.plot([direita,direita]   , [cima,baixo],"k")
+            ax.plot([direita,esquerda]  , [baixo,baixo],"k")
+            ax.tick_params(axis='both', which='major', labelsize=fontsize*0.8)
+            ax.set_title(figureTitle, fontsize=fontsize)
+            ax.set_xlabel("X (px)", fontsize = fontsize)
+            ax.set_ylabel("Y (px)", fontsize = fontsize)
+
+            divider = make_axes_locatable(ax)
+            cax = divider.append_axes('right',size='5%', pad=0.05)
+            cb = fig.colorbar(plot,cax=cax)
+            cb.ax.tick_params(labelsize=fontsize*0.8)
+            cb.set_label(label='Time (s)', fontsize=fontsize)
+
+            if invertY == True:
+                ax.invert_yaxis()
+
+def _splitMultiAnimal(data,**kwargs):
+    """
+    This function is not intended for the end user. _splitMultiAnimal performs 
+    the extraction of information from the hdf of multi-animals from the DLC to 
+    separate them into different DataFrames. Its output is a dictionary with 
+    this data.
+
+    Parameters
+    ----------
+    data : pandas DataFrame
+        The input tracking data in h5/hdf format (multi animal data).
+    bodyPart : str, optional
+        Body part you want to plot the tracking.
+    animals: list, optional
+        If you have multi-animal data and want to extract only specific animals, 
+        just pass in this variable a list with the name of the designated animal 
+        (e.g. animals ['rat1']).
+    start : int, optional
+        Moment of the video you want tracking to start, in seconds. If the variable 
+        is empty (None), the entire video will be processed.
+    end : int, optional
+        Moment of the video you want tracking to end, in seconds. If the variable is 
+        empty (None), the entire video will be processed.
+    fps : int
+        The recording frames per second.
+
+    Returns
+    -------
+    out : dict
+          The output of this function is a dictionary with the data of each
+          animal present in the HDF.
+
+    See Also
+    --------
+    For more information and usage examples: https://github.com/pyratlib/pyrat
+
+    Notes
+    -----
+    This function was developed based on DLC multianimal output."""
+
+    animals = kwargs.get('animals')
+    bodyParts = kwargs.get('animals')
+    start= kwargs.get('start')
+    end= kwargs.get('end')
+    fps= kwargs.get('fps')
+
+    if type(fps) == type(None):
+      fps = 30
+
+    if type(animals) == type(None):
+        animals = list(set([i[0] for i in list(set(data[data.columns[0][0]].columns))]))
+
+    if type(bodyParts) == type(None):       
+        bodyParts = list(set([i[1] for i in list(set(data[data.columns[0][0]].columns))]))
+
+    animals_data = {}
+
+    for i,animal in enumerate(animals):
+        parts = {}
+        for ç,bodyPart in enumerate(bodyParts):
+            temp = data[data.columns[0][0]][animal][bodyPart].iloc[:,0:3]
+
+            if type(start) == type(None) and type(end) == type(None):
+                parts[bodyPart] = ((temp['x'].values).astype(float),
+                                  (temp['y'].values).astype(float),
+                                  (temp['likelihood'].values).astype(float))
+            else:
+                if type(start) == type(None):
+                    finish = int(end[i]*fps)
+                    parts[bodyPart] = ((temp['x'][None:finish].values).astype(float),
+                                      (temp['y'][None:finish].values).astype(float),
+                                      (temp['likelihood'][None:finish].values).astype(float))
+                elif type(end) == type(None):
+                    init = int(start[i]*fps)
+                    parts[bodyPart] = ((temp['x'][init:None].values).astype(float),
+                                      (temp['y'][init:None].values).astype(float),
+                                      (temp['likelihood'][init:None].values).astype(float))
+                else:     
+                    init = int(start[i]*fps)
+                    finish = int(end[i]*fps)
+                    parts[bodyPart] = ((temp['x'][init:finish].values).astype(float),
+                                      (temp['y'][init:finish].values).astype(float),
+                                      (temp['likelihood'][init:finish].values).astype(float)) 
+                    
+        animals_data[animal] = parts
+                
+    return animals_data
+
+def multi2single(data,animal,**kwargs):
+    """
+    This function is used to remove information from a single animal from the 
+    h5/hdf file of a DLC multi-animal analysis. The main purpose of this 
+    function is to facilitate data analysis, by returning a DataFrame that can 
+    be used as input in all PyRAT functions, without the need for any adaptation.
+
+    Parameters
+    ----------
+    data : pandas DataFrame
+        The input tracking data in h5/hdf format (multi animal data).
+    animal : str
+        The key of the animal you want to extract from the hdf file. 
+        The same name used to label the DLC.
+    drop: bool, optional
+        If true, will drop the NaN values in the DataFrame.
+    bodyPart : str, optional
+        Body part you want to plot the tracking.
+    start : int, optional
+        Moment of the video you want tracking to start, in seconds. If the variable 
+        is empty (None), the entire video will be processed.
+    end : int, optional
+        Moment of the video you want tracking to end, in seconds. If the variable is 
+        empty (None), the entire video will be processed.
+    fps : int
+        The recording frames per second.
+
+    Returns
+    -------
+    out : DataFrame
+          The output of this function is a DataFrame with the data of the animal
+          passed in the input.
+
+    See Also
+    --------
+    For more information and usage examples: https://github.com/pyratlib/pyrat
+
+    Notes
+    -----
+    This function was developed based on DLC multianimal output."""
+
+    import numpy as np
+    import pandas as pd
+
+    animals = kwargs.get('animals')
+    bodyParts = kwargs.get('bodyParts')
+    start= kwargs.get('start')
+    end= kwargs.get('end')
+    fps= kwargs.get('fps')
+    drop= kwargs.get('drop')
+
+    if type(drop) == type(None):
+        drop = False
+
+    data = rat._splitMultiAnimal(data,
+                             animals = animals,
+                             bodyParts=bodyParts,
+                             start=start,
+                             end=end,
+                             fps=fps)
+    
+    parts = list(np.repeat(list(data[animal].keys()),3))
+    coord = ['x','y','likelihood']*len(list(data[animal].keys()))
+    header = ["{}.{}".format(animal, ç) for ç in range(len(parts))]
+
+    df_header = pd.DataFrame([list([-1]+parts),
+                             list([0]+coord)], 
+                             columns=['coords']+header)
+    
+    count = 0
+    temp_dict = {}
+
+    for ç,part in enumerate(list(data[animal].keys())):
+        temp = {header[ç+count]: data[animal][part][0],
+                header[ç+1+count]: data[animal][part][1],
+                header[ç+2+count]: data[animal][part][2],}
+        count +=2
+        temp_dict.update(temp)
+
+    df_temp = pd.DataFrame(temp_dict)
+
+    df = pd.concat([df_header, df_temp], ignore_index=True)
+    df['coords'] = np.arange(0,len(df['coords']),1)
+
+    if drop:
+        df = df.dropna()
+
+    return df
