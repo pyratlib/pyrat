@@ -2147,7 +2147,7 @@ def TrajectoryMA(data,bodyPart,bodyPartBox = None, **kwargs):
             if invertY == True:
                 ax.invert_yaxis()
 
-def _splitMultiAnimal(data,**kwargs):
+def splitMultiAnimal(data,**kwargs):
     """
     This function is not intended for the end user. _splitMultiAnimal performs 
     the extraction of information from the hdf of multi-animals from the DLC to 
@@ -2293,7 +2293,7 @@ def multi2single(data,animal,**kwargs):
     if type(drop) == type(None):
         drop = False
 
-    data = rat._splitMultiAnimal(data,
+    data = rat.splitMultiAnimal(data,
                                  animals=animals,
                                  bodyParts=bodyParts,
                                  start=start,
