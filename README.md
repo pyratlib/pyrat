@@ -65,7 +65,7 @@ The data is available on [Zenodo](https://doi.org/10.5281/zenodo.5865893)
 
 ## References:
 
-If you use our code or data we kindly as that you please [cite De Almeida et al, 2022](https://www.frontiersin.org/articles/10.3389/fnins.2022.779106/full) and, if you use the Python package (DeepLabCut2.x) please also cite [De Almeida et al, 2021](https://zenodo.org/record/5865893).
+If you use our code or data we kindly as that you please cite [De Almeida et al, 2022](https://www.frontiersin.org/articles/10.3389/fnins.2022.779106/full) and, if you use the Python package (DeepLabCut2.x) please also cite [De Almeida et al, 2021](https://zenodo.org/record/5865893).
 
 - De Almeida et al, 2022: [https://doi.org/10.3389/fnins.2022.779106](https://doi.org/10.3389/fnins.2022.779106)
 - De Almeida et al, 2021: [10.5281/zenodo.5883277](https://zenodo.org/record/5883277)
