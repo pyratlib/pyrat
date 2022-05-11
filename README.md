@@ -75,15 +75,15 @@ If you use our code or data we kindly as that you please cite [De Almeida et al,
 Please check out the following references for more details:
 
     @article{deAlmeida2022,
-      title={PyRAT: An open source-python library for fast and robust animal behavior analysis and neural data synchronization},
-      author={De Almeida, Tulio Fernandes and 
-              Spinelli, Bruno Guedes and 
-              Hypolito Lima, Ram{\'o}n and 
-              Gonzalez, Maria Carolina and 
-              Rodrigues, Abner Cardoso},
-      journal={Frontiers in Neuroscience},
-      pages={505},
-      publisher={Frontiers}
+      title        = {PyRAT: An open source-python library for fast and robust animal behavior analysis and neural data synchronization},
+      author       = {De Almeida, Tulio Fernandes and 
+                      Spinelli, Bruno Guedes and 
+                      Hypolito Lima, Ram{\'o}n and 
+                      Gonzalez, Maria Carolina and 
+                      Rodrigues, Abner Cardoso},
+      journal      = {Frontiers in Neuroscience},
+      pages        = {505},
+      publisher    = {Frontiers}
     }
 
     @dataset{deAlmeida2021,
