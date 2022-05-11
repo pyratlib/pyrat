@@ -63,7 +63,8 @@ The data is available on [Zenodo](https://doi.org/10.5281/zenodo.5865893)
 - Metrics in mice [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pyratlib/pyrat/blob/main/PyRAT_Mice.ipynb)
 - Neural Data example [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/pyratlib/pyrat/blob/main/PyRAT_Neural_Data.ipynb)
 
-## References:
+# References:
+-----------
 
 If you use our code or data we kindly as that you please cite [De Almeida et al, 2022](https://www.frontiersin.org/articles/10.3389/fnins.2022.779106/full) and, if you use the Python package (DeepLabCut2.x) please also cite [De Almeida et al, 2021](https://zenodo.org/record/5865893).
 
