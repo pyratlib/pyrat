@@ -104,7 +104,7 @@ Please check out the following references for more details:
 # Development Team:
 ------------
 
-- Tulio Almeida - [GitHub](https://github.com/tuliofalmeida) - [Google Scholar](https://scholar.google.com/citations?user=kkOy-JkAAAAJ&hl=en)
+- Tulio Almeida - [GitHub](https://github.com/tuliofalmeida) - [Google Scholar](https://scholar.google.com/citations?user=kkOy-JkAAAAJ&hl=en) - [Site](tuliofalmeida.com)
 - Bruno Spinelli - [GitHub](https://github.com/brunospinelli) - [Google Scholar](https://scholar.google.com/)
 - Ramon Hypolito - [GitHub](https://github.com/ramonhypolito) - [Google Scholar](https://scholar.google.com/citations?user=5lKx5GcAAAAJ&hl=pt-BR&oi=ao)
 - Maria Carolina Gonzalez - [GitHub](https://github.com/pyratlib) - [Google Scholar](https://scholar.google.com/citations?user=7OXkSPcAAAAJ&hl=pt-BR&oi=ao)
