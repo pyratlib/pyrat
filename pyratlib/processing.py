@@ -2147,17 +2147,19 @@ def TrajectoryMA(data,bodyPart,bodyPartBox = None, **kwargs):
             if invertY == True:
                 ax.invert_yaxis()
 
-def splitMultiAnimal(data,**kwargs):
+def splitMultiAnimal(data,data_type = '.h5',**kwargs):
     """
     This function is not intended for the end user. _splitMultiAnimal performs 
     the extraction of information from the hdf of multi-animals from the DLC to 
     separate them into different DataFrames. Its output is a dictionary with 
-    this data.
+    this data. 
 
     Parameters
     ----------
     data : pandas DataFrame
-        The input tracking data in h5/hdf format (multi animal data).
+        The input tracking data in h5/hdf/csv format (multi animal data).
+    data_type : str
+        Determine if the data format from DLC is in '.h5' or '.csv' format.
     bodyPart : str, optional
         Body part you want to plot the tracking.
     animals: list, optional
@@ -2191,7 +2193,7 @@ def splitMultiAnimal(data,**kwargs):
     import pandas as pd
 
     animals = kwargs.get('animals')
-    bodyParts = kwargs.get('animals')
+    bodyParts = kwargs.get('bodyParts')
     start= kwargs.get('start')
     end= kwargs.get('end')
     fps= kwargs.get('fps')
@@ -2199,56 +2201,96 @@ def splitMultiAnimal(data,**kwargs):
     if type(fps) == type(None):
       fps = 30
 
-    if type(animals) == type(None):
-        animals = list(set([i[0] for i in list(set(data[data.columns[0][0]].columns))]))
-
-    if type(bodyParts) == type(None):       
-        bodyParts = list(set([i[1] for i in list(set(data[data.columns[0][0]].columns))]))
-
     animals_data = {}
 
-    for i,animal in enumerate(animals):
-        parts = {}
-        for ç,bodyPart in enumerate(bodyParts):
-            temp = data[data.columns[0][0]][animal][bodyPart].iloc[:,0:3]
+    if data_type == '.h5':
+        if type(animals) == type(None):
+            animals = list(set([i[0] for i in list(set(data[data.columns[0][0]].columns))]))
 
-            if type(start) == type(None) and type(end) == type(None):
-                parts[bodyPart] = ((temp['x'].values).astype(float),
-                                  (temp['y'].values).astype(float),
-                                  (temp['likelihood'].values).astype(float))
-            else:
-                if type(start) == type(None):
-                    finish = int(end[i]*fps)
-                    parts[bodyPart] = ((temp['x'][None:finish].values).astype(float),
-                                      (temp['y'][None:finish].values).astype(float),
-                                      (temp['likelihood'][None:finish].values).astype(float))
-                elif type(end) == type(None):
-                    init = int(start[i]*fps)
-                    parts[bodyPart] = ((temp['x'][init:None].values).astype(float),
-                                      (temp['y'][init:None].values).astype(float),
-                                      (temp['likelihood'][init:None].values).astype(float))
-                else:     
-                    init = int(start[i]*fps)
-                    finish = int(end[i]*fps)
-                    parts[bodyPart] = ((temp['x'][init:finish].values).astype(float),
-                                      (temp['y'][init:finish].values).astype(float),
-                                      (temp['likelihood'][init:finish].values).astype(float)) 
-                    
-        animals_data[animal] = parts
+        if type(bodyParts) == type(None):       
+            bodyParts = list(set([i[1] for i in list(set(data[data.columns[0][0]].columns))]))
+
+        for i,animal in enumerate(animals):
+            parts = {}
+            for ç,bodyPart in enumerate(bodyParts):
+                temp = data[data.columns[0][0]][animal][bodyPart].iloc[:,0:3]
+
+                if type(start) == type(None) and type(end) == type(None):
+                    parts[bodyPart] = ((temp['x'].values).astype(float),
+                                      (temp['y'].values).astype(float),
+                                      (temp['likelihood'].values).astype(float))
+                else:
+                    if type(start) == type(None):
+                        finish = int(end[i]*fps)
+                        parts[bodyPart] = ((temp['x'][None:finish].values).astype(float),
+                                          (temp['y'][None:finish].values).astype(float),
+                                          (temp['likelihood'][None:finish].values).astype(float))
+                    elif type(end) == type(None):
+                        init = int(start[i]*fps)
+                        parts[bodyPart] = ((temp['x'][init:None].values).astype(float),
+                                          (temp['y'][init:None].values).astype(float),
+                                          (temp['likelihood'][init:None].values).astype(float))
+                    else:     
+                        init = int(start[i]*fps)
+                        finish = int(end[i]*fps)
+                        parts[bodyPart] = ((temp['x'][init:finish].values).astype(float),
+                                          (temp['y'][init:finish].values).astype(float),
+                                          (temp['likelihood'][init:finish].values).astype(float)) 
+                        
+            animals_data[animal] = parts
+    
+    if data_type == '.csv':
+        header = [(data[i][0]+' '+data[i][1]) for i in data.columns]
+        data.columns = header
+        if type(animals) == type(None): 
+            animals = list(set(data.iloc[0][1:]))
+        if type(bodyParts) == type(None):
+            bodyParts = list(set(data.iloc[1][1:])) 
+
+        for i,animal in enumerate(animals):
+            parts = {}
+            for ç,bodyPart in enumerate(bodyParts):
+                if type(start) == type(None) and type(end) == type(None):
+                    parts[bodyPart] = ((data[animal+' '+bodyPart].iloc[3:,0]).values.astype(float),
+                                      (data[animal+' '+bodyPart].iloc[3:,1]).values.astype(float),
+                                      (data[animal+' '+bodyPart].iloc[3:,2]).values.astype(float))
+                else:
+                    if type(start) == type(None):
+                        finish = int(end[i]*fps)
+                        parts[bodyPart] = ((data[animal+' '+bodyPart].iloc[3:,0][None:finish]).values.astype(float),
+                                          (data[animal+' '+bodyPart].iloc[3:,1][None:finish]).values.astype(float),
+                                          (data[animal+' '+bodyPart].iloc[3:,2][None:finish]).values.astype(float))
+                    elif type(end) == type(None):
+                        init = int(start[i]*fps)
+                        parts[bodyPart] = ((data[animal+' '+bodyPart].iloc[3:,0][init:None]).values.astype(float),
+                                          (data[animal+' '+bodyPart].iloc[3:,1][init:None]).values.astype(float),
+                                          (data[animal+' '+bodyPart].iloc[3:,2][init:None]).values.astype(float))
+                    else:     
+                        init = int(start[i]*fps)
+                        finish = int(end[i]*fps)
+                        parts[bodyPart] = ((data[animal+' '+bodyPart].iloc[3:,0][init:finish]).values.astype(float),
+                                          (data[animal+' '+bodyPart].iloc[3:,1][init:finish]).values.astype(float),
+                                          (data[animal+' '+bodyPart].iloc[3:,2][init:finish]).values.astype(float)) 
+                        
+            animals_data[animal] = parts      
                 
     return animals_data
 
-def multi2single(data,animal,**kwargs):
+def multi2single(data,animal,data_type = '.h5',**kwargs):
     """
     This function is used to remove information from a single animal from the 
     h5/hdf file of a DLC multi-animal analysis. The main purpose of this 
     function is to facilitate data analysis, by returning a DataFrame that can 
     be used as input in all PyRAT functions, without the need for any adaptation.
+    WARNING: If you run this function and found 'KeyError: 0', just read the data
+    again (pd.read_csv(data)).
 
     Parameters
     ----------
     data : pandas DataFrame
         The input tracking data in h5/hdf format (multi animal data).
+    data_type : str
+        Determine if the data format from DLC is in h5 or csv format.
     animal : str
         The key of the animal you want to extract from the hdf file. 
         The same name used to label the DLC.
@@ -2294,11 +2336,12 @@ def multi2single(data,animal,**kwargs):
         drop = False
 
     data = rat.splitMultiAnimal(data,
-                                 animals=animals,
-                                 bodyParts=bodyParts,
-                                 start=start,
-                                 end=end,
-                                 fps=fps)
+                                data_type=data_type,
+                                animals=animals,
+                                bodyParts=bodyParts,
+                                start=start,
+                                end=end,
+                                fps=fps)
     
     parts = list(np.repeat(list(data[animal].keys()),3))
     coord = ['x','y','likelihood']*len(list(data[animal].keys()))
@@ -2327,3 +2370,214 @@ def multi2single(data,animal,**kwargs):
         df = df.dropna()
 
     return df
+
+def distance_metrics(data, bodyparts_list,distance=28):
+    """
+    Returns the distance between the bodyparts.
+    
+    Parameters
+    ----------
+    data : pandas DataFrame
+        The input tracking data.
+    bodyparts_list : list
+        List with name of body parts.
+    distance : int
+        The linkage distance threshold above which, clusters will not be merged.
+
+    Returns
+    -------
+    d  : array
+        High dimension data.
+    
+    See Also
+    --------
+    For more information and usage examples: https://github.com/pyratlib/pyrat
+    
+    Notes
+    -----
+    This function was developed based on DLC outputs and is able to support 
+    matplotlib configurations."""
+
+    import numpy as np
+
+    values = (data.iloc[2:,1:].values).astype(float)
+    lista1 = (data.iloc[0][1:].values +" - " + data.iloc[1][1:].values).tolist()
+    bodyparts = []
+    for i in range(len(bodyparts_list)):
+      bodyparts.append(np.concatenate(((values[:,lista1.index(bodyparts_list[i]+" - x")]).reshape(1,-1).T,(values[:,lista1.index(bodyparts_list[i]+" - y")]).reshape(1,-1).T), axis=1))
+    distances = []
+    for k in range(len(bodyparts[0])):
+        frame_distances = []
+        for i in range(len(bodyparts)):
+            distance_row = []
+            for j in range( len(bodyparts) ):
+                distance_row.append(np.linalg.norm(bodyparts[i][k] - bodyparts[j][k]))
+            frame_distances.append(distance_row)
+        distances.append(frame_distances)
+    distances2 = np.asarray(distances)
+    for i in range(len(bodyparts)):
+      for k in range(len(bodyparts)):
+          distances2[:, i, j] = distances2[:, i, j]/np.max(distances2[:, i, j])
+    dist = []
+    for i in range(distances2.shape[0]):
+        dist.append(distances2[i, np.triu_indices(len(bodyparts), k = 1)[0], np.triu_indices(len(bodyparts), k = 1)[1]])
+    
+    return dist
+
+def model_distance(dimensions = 2,distance=28,n_jobs=None,verbose=None, perplexity=None,learning_rate=None):
+    """
+    Returns an array with the cluster by frame, an array with the embedding data in low-dimensional 
+    space and the clusterization model.
+    
+    Parameters
+    ----------
+    dimensions : int
+        Dimension of the embedded space.
+    distance : int
+        The linkage distance threshold above which, clusters will not be merged.
+    n_jobs : int, optional
+        The number of parallel jobs to run for neighbors search.
+    verbose : int, optional
+        Verbosity level.
+    perplexity : float, optional
+        The perplexity is related to the number of nearest neighbors that is used in other manifold learning algorithms. Larger datasets usually require a larger perplexity.
+    learning_rate : float, optional
+        t-SNE learning rate.
+
+    Returns
+    -------
+    model : Obj
+        AgglomerativeClustering model.
+    embedding : Obj
+        TSNE embedding
+    
+    See Also
+    --------
+    For more information and usage examples: https://github.com/pyratlib/pyrat
+    
+    Notes
+    -----
+    This function was developed based on DLC outputs and is able to support 
+    matplotlib configurations."""
+
+    from sklearn.manifold import TSNE
+    from sklearn.cluster import AgglomerativeClustering 
+
+    model = AgglomerativeClustering(n_clusters=None,distance_threshold=distance)
+
+    embedding = TSNE(n_components=dimensions,
+                     n_jobs=n_jobs,
+                     verbose=verbose,
+                     perplexity=perplexity,
+                     random_state = 42,
+                     n_iter = 5000,
+                     learning_rate =learning_rate,
+                     init='pca',
+                     early_exaggeration =12)
+
+    return model, embedding
+
+def ClassifyBehaviorMultiVideos(data, bodyparts_list, dimensions = 2,distance=28, **kwargs):
+    """
+    Returns an array with the cluster by frame, an array with the embedding data in low-dimensional 
+    space and the clusterization model.
+    
+    Parameters
+    ----------
+    data : dict with DataFrames
+        The input tracking data concatenated.
+    bodyparts_list : list
+        List with name of body parts.
+    dimensions : int
+        Dimension of the embedded space.
+    distance : int
+        The linkage distance threshold above which, clusters will not be merged.
+    n_jobs : int, optional
+        The number of parallel jobs to run for neighbors search.
+    verbose : int, optional
+        Verbosity level.
+    perplexity : float, optional
+        The perplexity is related to the number of nearest neighbors that is used in other manifold learning algorithms. Larger datasets usually require a larger perplexity.
+    learning_rate : float, optional
+        t-SNE learning rate.
+
+    Returns
+    -------
+    cluster_df : df
+        Array with the cluster by frame/video.
+    cluster_coord : DataFrame
+        Embedding of the training data in low-dimensional space.
+    fitted_model : Obj
+        AgglomerativeClustering model.
+
+    See Also
+    --------
+    For more information and usage examples: https://github.com/pyratlib/pyrat
+    
+    Notes
+    -----
+    This function was developed based on DLC outputs and is able to support 
+    matplotlib configurations."""
+
+    import numpy as np
+    import pandas as pd
+    import pyratlib as rat
+    from sklearn.preprocessing import StandardScaler
+
+    n_jobs = kwargs.get('n_jobs')
+    verbose = kwargs.get('verbose')
+    perplexity = kwargs.get("perplexity")
+    learning_rate = kwargs.get("learning_rate")
+
+    if type(n_jobs) == type(None):
+      n_jobs=-1
+    if type(verbose) == type(None):
+      verbose=0
+    if type(perplexity) == type(None):
+      perplexity = data[next(iter(data))].shape[0]//100
+    if type(learning_rate) == type(None):
+      learning_rate = (data[next(iter(data))].shape[0]//12)/4
+
+    distancias       = {}
+    dist_scaled      = {}
+    cluster_labels   = {}
+    distance_df      = {}
+
+    model,embedding  = rat.model_distance(dimensions = dimensions,
+                                          distance=distance,
+                                          n_jobs=n_jobs,
+                                          verbose=verbose, 
+                                          perplexity=perplexity,
+                                          learning_rate=learning_rate)
+
+
+    for i,video in enumerate(data):
+        dist_temp            = np.asarray(rat.distance_metrics(data[video],
+                                          bodyparts_list=bodyparts_list,
+                                          distance=distance))    
+        distancias[video]    = dist_temp
+        dist_scaled[video]   = StandardScaler().fit_transform(distancias[video])
+
+
+    dist_scaled_all    = np.concatenate([dist_scaled[x] for x in dist_scaled], 0)
+    X_transformed      = embedding.fit_transform(dist_scaled_all)
+    fitted_model       = model.fit(dist_scaled_all)
+    cluster_labels_all = model.labels_
+
+
+    for i,video in enumerate(data): 
+        if i == 0:
+            cluster_labels[video] = cluster_labels_all[0:dist_scaled[video].shape[0]]
+            index0                = dist_scaled[video].shape[0]
+        else:
+            cluster_labels[video] = cluster_labels_all[index0:(index0+dist_scaled[video].shape[0])]
+            index0                = index0+dist_scaled[video].shape[0]
+
+
+    cluster_coord                      = pd.DataFrame.from_dict({ 'x_n_samples':X_transformed[:,0],'y_n_components':X_transformed[:,1] })
+    distance_df                        = pd.DataFrame.from_dict({'distance '+str(dist): dist_scaled_all[:,dist] for dist in range(dist_scaled_all.shape[1])})
+    cluster_coord[distance_df.columns] = distance_df
+    cluster_df                         = pd.DataFrame.from_dict(cluster_labels)
+
+
+    return cluster_df, cluster_coord ,fitted_model
