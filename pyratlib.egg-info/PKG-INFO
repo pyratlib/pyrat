@@ -1,10 +1,10 @@
 Metadata-Version: 2.1
 Name: pyratlib
-Version: 0.7.6
+Version: 0.7.7
 Summary: PyRat is a user friendly library in python to analyze data from the DeepLabCut. Developed to help researchers unfamiliar with programming can perform animal behavior analysis more simpler.
 Home-page: https://github.com/pyratlib/pyrat
-License: MIT
 Download-URL: https://github.com/pyratlib/pyrat
+License: MIT
 Keywords: Data analysis,Animal Behavior,Electrophysiology,Tracking,DeepLabCut
 Platform: UNKNOWN
 Classifier: Development Status :: 4 - Beta
@@ -80,6 +80,7 @@ The data is available on [Zenodo](https://doi.org/10.5281/zenodo.5865893)
 - Notebook with the t-SNE algorithm. [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tuliofalmeida/pyjama/blob/main/PyJama_JAMA_exemple.ipynb)       -->
 - Basic Usage [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pyratlib/pyrat/blob/main/PyRAT_Basic_Plots.ipynb)
 - Behavior Classification [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pyratlib/pyrat/blob/main/PyRAT_Behavior_Classification.ipynb)
+- Behavior Classification of multiple videos [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/pyratlib/pyrat/blob/main/Classify_Multiple_Videos.ipynb)
 - Metrics in mice [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pyratlib/pyrat/blob/main/PyRAT_Mice.ipynb)
 - Neural Data example [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/pyratlib/pyrat/blob/main/PyRAT_Neural_Data.ipynb)
 
@@ -124,7 +125,7 @@ Please check out the following references for more details:
 # Development Team:
 ------------
 
-- Tulio Almeida - [GitHub](https://github.com/tuliofalmeida) - [Google Scholar](https://scholar.google.com/citations?user=kkOy-JkAAAAJ&hl=en) - [Site](tuliofalmeida.com)
+- Tulio Almeida - [GitHub](https://github.com/tuliofalmeida) - [Google Scholar](https://scholar.google.com/citations?user=kkOy-JkAAAAJ&hl=en) - [Site](https://tuliofalmeida.com/)
 - Bruno Spinelli - [GitHub](https://github.com/brunospinelli) - [Google Scholar](https://scholar.google.com/)
 - Ramon Hypolito - [GitHub](https://github.com/ramonhypolito) - [Google Scholar](https://scholar.google.com/citations?user=5lKx5GcAAAAJ&hl=pt-BR&oi=ao)
 - Maria Carolina Gonzalez - [GitHub](https://github.com/pyratlib) - [Google Scholar](https://scholar.google.com/citations?user=7OXkSPcAAAAJ&hl=pt-BR&oi=ao)
